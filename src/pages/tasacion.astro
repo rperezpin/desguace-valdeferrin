@@ -1,0 +1,146 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { site } from '../data/site';
+---
+
+<Layout
+  title="Tasacion de Vehiculos"
+  description="Solicite una tasacion gratuita para su vehiculo. Compramos coches averiados, siniestrados o para desguace. Maxima valoracion y recogida con grua gratis en Ejea y comarca."
+>
+  <!-- Header -->
+  <section class="bg-primary-700 text-white py-10">
+    <div class="container-site">
+      <h1 class="font-display font-bold text-3xl md:text-4xl mb-2">Tasacion de Vehiculos</h1>
+      <p class="text-primary-200">Rellene el formulario y recibira una valoracion sin compromiso en menos de 24h.</p>
+    </div>
+  </section>
+
+  <section class="section-padding">
+    <div class="container-site max-w-3xl">
+      <div class="bg-white rounded-xl shadow-sm border border-grey-200 p-6 md:p-10">
+        <form id="tasacion-form" class="space-y-8">
+          <!-- Step 1: Vehiculo -->
+          <fieldset>
+            <legend class="font-display font-bold text-lg text-dark mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 bg-primary-700 text-white rounded-full flex items-center justify-center text-sm font-bold">1</span>
+              Datos del vehiculo
+            </legend>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label for="marca" class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-1">Marca *</label>
+                <input type="text" id="marca" name="marca" required placeholder="Ej: Seat" class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+              </div>
+              <div>
+                <label for="modelo" class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-1">Modelo *</label>
+                <input type="text" id="modelo" name="modelo" required placeholder="Ej: Leon" class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+              </div>
+              <div>
+                <label for="anio" class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-1">Ano *</label>
+                <input type="number" id="anio" name="anio" required min="1990" max="2026" placeholder="Ej: 2018" class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+              </div>
+              <div>
+                <label for="motor" class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-1">Motorizacion</label>
+                <input type="text" id="motor" name="motor" placeholder="Ej: 2.0 TDI" class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Step 2: Estado -->
+          <fieldset>
+            <legend class="font-display font-bold text-lg text-dark mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 bg-primary-700 text-white rounded-full flex items-center justify-center text-sm font-bold">2</span>
+              Estado del vehiculo
+            </legend>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label for="estado" class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-1">Estado *</label>
+                <select id="estado" name="estado" required class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500">
+                  <option value="">Seleccione...</option>
+                  <option value="funciona">Funciona correctamente</option>
+                  <option value="averiado">Averiado (no arranca)</option>
+                  <option value="siniestrado">Siniestrado / golpe</option>
+                  <option value="desguace">Para desguace</option>
+                </select>
+              </div>
+              <div>
+                <label for="km" class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-1">Kilometros</label>
+                <input type="number" id="km" name="km" placeholder="Ej: 150000" class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+              </div>
+              <div class="sm:col-span-2">
+                <label for="ubicacion" class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-1">Ubicacion del vehiculo *</label>
+                <input type="text" id="ubicacion" name="ubicacion" required placeholder="Ej: Ejea de los Caballeros" class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Step 3: Contacto -->
+          <fieldset>
+            <legend class="font-display font-bold text-lg text-dark mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 bg-primary-700 text-white rounded-full flex items-center justify-center text-sm font-bold">3</span>
+              Datos de contacto
+            </legend>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label for="nombre" class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-1">Nombre *</label>
+                <input type="text" id="nombre" name="nombre" required placeholder="Su nombre" class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+              </div>
+              <div>
+                <label for="telefono" class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-1">Telefono *</label>
+                <input type="tel" id="telefono" name="telefono" required placeholder="Ej: 600 000 000" class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+              </div>
+              <div class="sm:col-span-2">
+                <label for="email" class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-1">Email</label>
+                <input type="email" id="email" name="email" placeholder="su@email.com" class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+              </div>
+              <div class="sm:col-span-2">
+                <label for="comentarios" class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-1">Comentarios</label>
+                <textarea id="comentarios" name="comentarios" rows="3" placeholder="Detalles adicionales sobre su vehiculo..." class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 resize-y"></textarea>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Honeypot anti-spam -->
+          <div class="hidden" aria-hidden="true">
+            <input type="text" name="website" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-4 items-center">
+            <button type="submit" class="btn-primary w-full sm:w-auto">
+              Solicitar Tasacion Gratuita
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+            </button>
+            <p class="text-xs text-grey-600">
+              Le responderemos en menos de 24 horas laborables.
+            </p>
+          </div>
+        </form>
+
+        <!-- Success message -->
+        <div id="form-success" class="hidden text-center py-8">
+          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-primary-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+          <h2 class="font-display font-bold text-2xl text-dark mb-2">Solicitud enviada</h2>
+          <p class="text-grey-600 mb-4">Hemos recibido su solicitud de tasacion. Nos pondremos en contacto con usted en menos de 24 horas.</p>
+          <a href="/" class="btn-secondary">Volver al inicio</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const form = document.getElementById('tasacion-form') as HTMLFormElement;
+  const success = document.getElementById('form-success');
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    // Honeypot check
+    const honeypot = form.querySelector('input[name="website"]') as HTMLInputElement;
+    if (honeypot?.value) return;
+
+    // In production: send to backend API
+    form.classList.add('hidden');
+    success?.classList.remove('hidden');
+  });
+</script>

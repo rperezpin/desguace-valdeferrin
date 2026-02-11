@@ -1,0 +1,171 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { site } from '../data/site';
+
+const pasos = [
+  { numero: 1, titulo: 'Contacte con nosotros', descripcion: 'Llamenos, escribanos por WhatsApp o rellene el formulario con los datos de su vehiculo.' },
+  { numero: 2, titulo: 'Tasacion y acuerdo', descripcion: 'Le ofrecemos la maxima valoracion por su vehiculo. Sin sorpresas ni costes ocultos.' },
+  { numero: 3, titulo: 'Recogida con grua', descripcion: 'Recogemos el vehiculo en Ejea y comarca de forma gratuita con nuestra grua propia.' },
+  { numero: 4, titulo: 'Baja definitiva en DGT', descripcion: 'Tramitamos la baja oficial en la DGT. Recibira el certificado de baja inmediatamente.' },
+];
+
+const faqs = [
+  { pregunta: 'Cuanto cuesta dar de baja un vehiculo?', respuesta: 'El servicio de baja es gratuito. Ademas, le pagamos por su vehiculo segun su estado y modelo. No tiene ningun coste para usted.' },
+  { pregunta: 'Necesito llevar el coche al desguace?', respuesta: 'No. Disponemos de grua propia y recogemos el vehiculo donde se encuentre dentro de Ejea de los Caballeros y la comarca de las Cinco Villas sin coste.' },
+  { pregunta: 'Que documentacion necesito?', respuesta: 'Necesitara el permiso de circulacion, la ficha tecnica (tarjeta ITV) y su DNI. Si el vehiculo tiene alguna carga financiera, consultenos.' },
+  { pregunta: 'Cuanto tarda el proceso de baja?', respuesta: 'La baja ante la DGT se tramita de forma inmediata. Recibira el certificado de baja el mismo dia de la recogida del vehiculo.' },
+  { pregunta: 'Puedo dar de baja un coche que no arranca?', respuesta: 'Si, compramos y damos de baja vehiculos en cualquier estado: averiados, siniestrados, sin ITV, sin motor, etc.' },
+];
+---
+
+<Layout
+  title="Baja de Vehiculo"
+  description="Gestion de baja definitiva de vehiculos en Ejea de los Caballeros. Tramitacion DGT, recogida con grua gratis y certificado de baja inmediato. Centro CATV autorizado."
+>
+  <!-- Header -->
+  <section class="bg-primary-700 text-white py-10">
+    <div class="container-site">
+      <h1 class="font-display font-bold text-3xl md:text-4xl mb-2">Baja de Vehiculo</h1>
+      <p class="text-primary-200">Gestion integral de baja definitiva ante la DGT con recogida gratuita.</p>
+    </div>
+  </section>
+
+  <!-- Proceso / Timeline -->
+  <section class="section-padding">
+    <div class="container-site max-w-3xl">
+      <h2 class="font-display font-bold text-2xl md:text-3xl text-dark text-center mb-12">
+        Como funciona el proceso de baja
+      </h2>
+
+      <div class="relative">
+        <!-- Vertical line -->
+        <div class="absolute left-6 top-0 bottom-0 w-0.5 bg-primary-200 hidden sm:block"></div>
+
+        <div class="space-y-8">
+          {pasos.map((paso) => (
+            <div class="flex gap-6 items-start">
+              <div class="w-12 h-12 bg-primary-700 text-white rounded-full flex items-center justify-center font-display font-bold text-lg shrink-0 relative z-10">
+                {paso.numero}
+              </div>
+              <div class="pt-2">
+                <h3 class="font-display font-bold text-lg text-dark">{paso.titulo}</h3>
+                <p class="text-grey-600 mt-1">{paso.descripcion}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="text-center mt-12">
+        <a
+          href={site.whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-primary"
+        >
+          Solicitar Baja por WhatsApp
+        </a>
+        <p class="text-sm text-grey-600 mt-3">O llamenos al <a href={site.phoneHref} class="text-primary-700 font-semibold hover:underline">{site.phone}</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section-padding bg-white">
+    <div class="container-site max-w-3xl">
+      <h2 class="font-display font-bold text-2xl md:text-3xl text-dark text-center mb-10">
+        Preguntas Frecuentes
+      </h2>
+
+      <div class="space-y-4">
+        {faqs.map((faq, i) => (
+          <details class="group bg-light rounded-xl border border-grey-200 overflow-hidden">
+            <summary class="flex items-center justify-between gap-4 px-6 py-4 cursor-pointer list-none font-medium text-dark hover:text-primary-700 transition-colors">
+              <span>{faq.pregunta}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0 text-grey-400 group-open:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </summary>
+            <div class="px-6 pb-4 text-sm text-grey-600 leading-relaxed">
+              {faq.respuesta}
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Formulario de solicitud -->
+  <section class="section-padding">
+    <div class="container-site max-w-3xl">
+      <div class="bg-white rounded-xl shadow-sm border border-grey-200 p-6 md:p-10">
+        <h2 class="font-display font-bold text-2xl text-dark mb-6 text-center">
+          Solicite la baja de su vehiculo
+        </h2>
+
+        <form id="baja-form" class="space-y-4">
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label for="b-nombre" class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-1">Nombre *</label>
+              <input type="text" id="b-nombre" name="nombre" required class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+            </div>
+            <div>
+              <label for="b-telefono" class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-1">Telefono *</label>
+              <input type="tel" id="b-telefono" name="telefono" required class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+            </div>
+            <div>
+              <label for="b-marca" class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-1">Marca vehiculo *</label>
+              <input type="text" id="b-marca" name="marca" required class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+            </div>
+            <div>
+              <label for="b-modelo" class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-1">Modelo *</label>
+              <input type="text" id="b-modelo" name="modelo" required class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+            </div>
+            <div>
+              <label for="b-matricula" class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-1">Matricula</label>
+              <input type="text" id="b-matricula" name="matricula" class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+            </div>
+            <div>
+              <label for="b-ubicacion" class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-1">Ubicacion vehiculo *</label>
+              <input type="text" id="b-ubicacion" name="ubicacion" required placeholder="Ejea de los Caballeros" class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+            </div>
+          </div>
+          <div>
+            <label for="b-comentarios" class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-1">Comentarios</label>
+            <textarea id="b-comentarios" name="comentarios" rows="3" class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 resize-y"></textarea>
+          </div>
+
+          <!-- Honeypot -->
+          <div class="hidden" aria-hidden="true">
+            <input type="text" name="company" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <button type="submit" class="btn-primary w-full sm:w-auto">
+            Solicitar Baja Gratuita
+          </button>
+        </form>
+
+        <div id="baja-success" class="hidden text-center py-8">
+          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-primary-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+          <h3 class="font-display font-bold text-2xl text-dark mb-2">Solicitud recibida</h3>
+          <p class="text-grey-600">Nos pondremos en contacto con usted para gestionar la baja de su vehiculo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const form = document.getElementById('baja-form') as HTMLFormElement;
+  const success = document.getElementById('baja-success');
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const honeypot = form.querySelector('input[name="company"]') as HTMLInputElement;
+    if (honeypot?.value) return;
+
+    form.classList.add('hidden');
+    success?.classList.remove('hidden');
+  });
+</script>

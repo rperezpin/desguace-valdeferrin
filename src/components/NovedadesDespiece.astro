@@ -1,0 +1,29 @@
+---
+import ProductCard from './ProductCard.astro';
+import products from '../data/products.json';
+---
+
+<section class="section-spacing section-padding">
+  <div class="container-site">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12 md:mb-14 gap-4">
+      <div>
+        <h2 class="font-display font-bold text-3xl md:text-4xl text-dark mb-2">
+          Novedades en Despiece
+        </h2>
+        <p class="text-grey-600">
+          Ultimas piezas incorporadas a nuestro stock
+        </p>
+      </div>
+      <a href="/recambios" class="btn-secondary shrink-0 self-start sm:self-auto">
+        Ver todo el stock
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+      </a>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {products.slice(0, 8).map((product) => (
+        <ProductCard {...product} />
+      ))}
+    </div>
+  </div>
+</section>

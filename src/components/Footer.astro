@@ -1,0 +1,91 @@
+---
+import { site } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-dark text-grey-400 mt-auto">
+  <div class="container-site py-12 lg:py-16">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+      <!-- Col 1: Brand -->
+      <div class="lg:col-span-1">
+        <div class="flex items-center gap-3 mb-4">
+          <img src="/images/logo_96.png" alt={site.name} width="40" height="40" class="w-10 h-10 rounded-full" />
+          <span class="font-display font-bold text-white text-lg uppercase">{site.name}</span>
+        </div>
+        <p class="text-sm leading-relaxed">
+          Centro Autorizado de Tratamiento de Vehiculos en Ejea de los Caballeros.
+          Recambios con garantia, bajas de vehiculos y recogida gratuita con grua.
+        </p>
+      </div>
+
+      <!-- Col 2: Links -->
+      <div>
+        <h4 class="font-display font-bold text-white text-sm uppercase tracking-wider mb-4">Secciones</h4>
+        <ul class="space-y-2">
+          {site.nav.map((item) => (
+            <li>
+              <a href={item.href} class="text-sm hover:text-primary-300 transition-colors">
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Col 3: Contacto -->
+      <div>
+        <h4 class="font-display font-bold text-white text-sm uppercase tracking-wider mb-4">Contacto</h4>
+        <ul class="space-y-3 text-sm">
+          <li class="flex items-start gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mt-0.5 shrink-0 text-primary-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <span>{site.address.street}<br />{site.address.postalCode} {site.address.city} ({site.address.province})</span>
+          </li>
+          <li>
+            <a href={site.phoneHref} class="flex items-center gap-2 hover:text-primary-300 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0 text-primary-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+              {site.phone}
+            </a>
+          </li>
+          <li>
+            <a href={`mailto:${site.email}`} class="flex items-center gap-2 hover:text-primary-300 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0 text-primary-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+              {site.email}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Horario -->
+      <div>
+        <h4 class="font-display font-bold text-white text-sm uppercase tracking-wider mb-4">Horario</h4>
+        <ul class="space-y-3 text-sm">
+          <li>
+            <span class="block text-grey-400">Lunes - Viernes</span>
+            <span class="text-white font-medium">{site.horario.lunesViernes}</span>
+          </li>
+          <li>
+            <span class="block text-grey-400">Sabado</span>
+            <span class="text-white font-medium">{site.horario.sabado}</span>
+          </li>
+          <li>
+            <span class="block text-grey-400">Domingo</span>
+            <span class="text-red-400 font-medium">{site.horario.domingo}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="border-t border-grey-800 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
+      <div class="flex flex-wrap gap-4">
+        <a href="/aviso-legal" class="hover:text-primary-300 transition-colors">Aviso Legal</a>
+        <a href="/privacidad" class="hover:text-primary-300 transition-colors">Politica de Privacidad</a>
+        <a href="/cookies" class="hover:text-primary-300 transition-colors">Cookies</a>
+        <a href="/devoluciones" class="hover:text-primary-300 transition-colors">Devoluciones</a>
+      </div>
+      <p class="text-grey-600">
+        &copy; {year} {site.name}. Todos los derechos reservados.
+      </p>
+    </div>
+  </div>
+</footer>

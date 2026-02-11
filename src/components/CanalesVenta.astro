@@ -1,0 +1,62 @@
+---
+import { site } from '../data/site';
+---
+
+<section class="section-spacing section-padding bg-white">
+  <div class="container-site">
+    <div class="text-center mb-14 md:mb-16">
+      <h2 class="font-display font-bold text-3xl md:text-4xl text-dark mb-3">
+        Tambien nos encontrara en
+      </h2>
+      <p class="text-grey-600 max-w-xl mx-auto">
+        Vendemos piezas en los principales marketplaces. Encuentre nuestro stock tambien en:
+      </p>
+    </div>
+
+    <div class="grid sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
+      <!-- eBay -->
+      <a
+        href={site.social.ebay}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex flex-col items-center gap-3 p-7 rounded-2xl border border-grey-200 bg-light hover:border-primary-300 hover:shadow-lg transition-all duration-300 group"
+      >
+        <div class="w-16 h-16 flex items-center justify-center rounded-xl bg-white shadow-sm">
+          <span class="font-display font-bold text-2xl">
+            <span class="text-red-500">e</span><span class="text-blue-500">B</span><span class="text-yellow-500">a</span><span class="text-green-500">y</span>
+          </span>
+        </div>
+        <span class="font-display font-bold text-sm uppercase text-dark group-hover:text-primary-700 transition-colors">Tienda eBay</span>
+        <span class="text-xs text-grey-600 text-center">Recambios con envio internacional</span>
+      </a>
+
+      <!-- Wallapop -->
+      <a
+        href={site.social.wallapop}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex flex-col items-center gap-3 p-7 rounded-2xl border border-grey-200 bg-light hover:border-primary-300 hover:shadow-lg transition-all duration-300 group"
+      >
+        <div class="w-16 h-16 flex items-center justify-center rounded-xl bg-white shadow-sm">
+          <span class="font-display font-bold text-2xl text-teal-500">W</span>
+        </div>
+        <span class="font-display font-bold text-sm uppercase text-dark group-hover:text-primary-700 transition-colors">Wallapop</span>
+        <span class="text-xs text-grey-600 text-center">Piezas con envio y recogida local</span>
+      </a>
+
+      <!-- Milanuncios -->
+      <a
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex flex-col items-center gap-3 p-7 rounded-2xl border border-grey-200 bg-light hover:border-primary-300 hover:shadow-lg transition-all duration-300 group"
+      >
+        <div class="w-16 h-16 flex items-center justify-center rounded-xl bg-white shadow-sm">
+          <span class="font-display font-bold text-2xl text-orange-500">M</span>
+        </div>
+        <span class="font-display font-bold text-sm uppercase text-dark group-hover:text-primary-700 transition-colors">Milanuncios</span>
+        <span class="text-xs text-grey-600 text-center">Anuncios de recambios en toda Espana</span>
+      </a>
+    </div>
+  </div>
+</section>
