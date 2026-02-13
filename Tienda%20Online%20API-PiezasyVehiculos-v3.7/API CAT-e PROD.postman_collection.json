@@ -1,0 +1,609 @@
+{
+	"info": {
+		"_postman_id": "7fc7764c-dcb7-4142-95b9-f6e9e77b4dad",
+		"name": "API CAT-e PROD",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Catáloco",
+			"item": [
+				{
+					"name": "GetTipos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V1/Catalogo/GetTipos/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V1",
+								"Catalogo",
+								"GetTipos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSubTipos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V1/Catalogo/GetSubTipos/2",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V1",
+								"Catalogo",
+								"GetSubTipos",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMarcas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V1/Catalogo/GetMarcas/4",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V1",
+								"Catalogo",
+								"GetMarcas",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetModelos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V1/Catalogo/GetModelos/_vCm3FtnZyQ5yBcmYPopVg2",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V1",
+								"Catalogo",
+								"GetModelos",
+								"_vCm3FtnZyQ5yBcmYPopVg2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetVersiones",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V1/Catalogo/GetVersiones/_vCm3FtnZyQ5yBcmYPopVg2/urmXN6cmtpzKix7O8F4uuw2",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V1",
+								"Catalogo",
+								"GetVersiones",
+								"_vCm3FtnZyQ5yBcmYPopVg2",
+								"urmXN6cmtpzKix7O8F4uuw2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMotores",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V1/Catalogo/GetMotores/4/_vCm3FtnZyQ5yBcmYPopVg2/urmXN6cmtpzKix7O8F4uuw2/H4wFh5PyqC0K3AvcFLhXiA2",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V1",
+								"Catalogo",
+								"GetMotores",
+								"4",
+								"_vCm3FtnZyQ5yBcmYPopVg2",
+								"urmXN6cmtpzKix7O8F4uuw2",
+								"H4wFh5PyqC0K3AvcFLhXiA2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetGrupos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V1/Catalogo/GetGrupos/4",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V1",
+								"Catalogo",
+								"GetGrupos",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPiezas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V1/Catalogo/GetPiezas/4/7",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V1",
+								"Catalogo",
+								"GetPiezas",
+								"4",
+								"7"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Piezas",
+			"item": [
+				{
+					"name": "GetNumPiezas (Búsqueda Rápida)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V2/Busqueda/GetNumPiezas/MOTOR%20COMPLETO%20SEAT",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V2",
+								"Busqueda",
+								"GetNumPiezas",
+								"MOTOR%20COMPLETO%20SEAT"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPiezas (Búsqueda Rápida)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V2/Busqueda/GetPiezas/COMPRESOR%20AIRE%20ACOND%20SERIE%205%20TOURING",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V2",
+								"Busqueda",
+								"GetPiezas",
+								"COMPRESOR%20AIRE%20ACOND%20SERIE%205%20TOURING"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPieza",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V2/Busqueda/GetPieza/45689",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V2",
+								"Busqueda",
+								"GetPieza",
+								"45689"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetNumPiezas (Búsqueda Avanzada)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V2/Busqueda/GetNumPiezas/4/_vCm3FtnZyQ5yBcmYPopVg2/-1/-1/3Y-pnOj6qNad0atDjEEHfg2",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V2",
+								"Busqueda",
+								"GetNumPiezas",
+								"4",
+								"_vCm3FtnZyQ5yBcmYPopVg2",
+								"-1",
+								"-1",
+								"3Y-pnOj6qNad0atDjEEHfg2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPiezas (Búsqueda Avanzada)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V2/Busqueda/GetPiezas/4/_vCm3FtnZyQ5yBcmYPopVg2/-1/-1/3Y-pnOj6qNad0atDjEEHfg2/0/10",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V2",
+								"Busqueda",
+								"GetPiezas",
+								"4",
+								"_vCm3FtnZyQ5yBcmYPopVg2",
+								"-1",
+								"-1",
+								"3Y-pnOj6qNad0atDjEEHfg2",
+								"0",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetNumPiezasEquiv (Búsqueda Equivalentes)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V2/Busqueda/GetNumPiezasEquiv/4/_vCm3FtnZyQ5yBcmYPopVg2/-1/-1/3Y-pnOj6qNad0atDjEEHfg2",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V2",
+								"Busqueda",
+								"GetNumPiezasEquiv",
+								"4",
+								"_vCm3FtnZyQ5yBcmYPopVg2",
+								"-1",
+								"-1",
+								"3Y-pnOj6qNad0atDjEEHfg2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPiezasEquiv (Búsqueda Equivalentes)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V2/Busqueda/GetPiezasEquiv/4/_vCm3FtnZyQ5yBcmYPopVg2/-1/-1/3Y-pnOj6qNad0atDjEEHfg2/0/10",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V2",
+								"Busqueda",
+								"GetPiezasEquiv",
+								"4",
+								"_vCm3FtnZyQ5yBcmYPopVg2",
+								"-1",
+								"-1",
+								"3Y-pnOj6qNad0atDjEEHfg2",
+								"0",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetNumPiezasRef (Búsqueda Referencia)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V2/Busqueda/GetNumPiezasRef/047903015G",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V2",
+								"Busqueda",
+								"GetNumPiezasRef",
+								"047903015G"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPiezasRef (Búsqueda Referencia)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V2/Busqueda/GetPiezasRef/047903015G",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V2",
+								"Busqueda",
+								"GetPiezasRef",
+								"047903015G"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vehículos",
+			"item": [
+				{
+					"name": "GetVehiculo (V1)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V1/Vehiculos/GetVehiculo/4136",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V1",
+								"Vehiculos",
+								"GetVehiculo",
+								"4136"
+							]
+						},
+						"description": "Nota: Solo devuelve vehículos marcados \"Para Venta\" o \"Para Reparacion + Venta\""
+					},
+					"response": []
+				},
+				{
+					"name": "GetVehiculo (V2)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V2/Vehiculos/GetVehiculo/4136",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V2",
+								"Vehiculos",
+								"GetVehiculo",
+								"4136"
+							]
+						},
+						"description": "Nota: Devuelve cualquier vehículo que no esté eliminado"
+					},
+					"response": []
+				},
+				{
+					"name": "GetNumVehiculos (Búsqueda Rápida)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V1/Vehiculos/GetNumVehiculos/audi%20A4",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V1",
+								"Vehiculos",
+								"GetNumVehiculos",
+								"audi%20A4"
+							]
+						},
+						"description": "Nota: Solo devuelve vehículos marcados \"Para Venta\" o \"Para Reparacion + Venta\""
+					},
+					"response": []
+				},
+				{
+					"name": "GetVehiculos (Búsqueda Rápida)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V1/Vehiculos/GetVehiculos/audi%20A4",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V1",
+								"Vehiculos",
+								"GetVehiculos",
+								"audi%20A4"
+							]
+						},
+						"description": "Nota: Solo devuelve vehículos marcados \"Para Venta\" o \"Para Reparacion + Venta\""
+					},
+					"response": []
+				},
+				{
+					"name": "GetNumVehiculos (Búsqueda Avanzada)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V1/Vehiculos/GetNumVehiculos/4/_vCm3FtnZyQ5yBcmYPopVg2/-1/-1/-1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V1",
+								"Vehiculos",
+								"GetNumVehiculos",
+								"4",
+								"_vCm3FtnZyQ5yBcmYPopVg2",
+								"-1",
+								"-1",
+								"-1"
+							]
+						},
+						"description": "Nota: Solo devuelve vehículos marcados \"Para Venta\" o \"Para Reparacion + Venta\""
+					},
+					"response": []
+				},
+				{
+					"name": "GetVehiculos (Búsqueda Avanzada)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/V1/Vehiculos/GetVehiculos/4/_vCm3FtnZyQ5yBcmYPopVg2/-1/-1/-1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"V1",
+								"Vehiculos",
+								"GetVehiculos",
+								"4",
+								"_vCm3FtnZyQ5yBcmYPopVg2",
+								"-1",
+								"-1",
+								"-1"
+							]
+						},
+						"description": "Nota: Solo devuelve vehículos marcados \"Para Venta\" o \"Para Reparacion + Venta\""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Facturacion",
+			"item": [
+				{
+					"name": "GetDocumentos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/API/Exportacion/Documentos/GetDocumentos/ASDFGHJQWERTYASDGZXCV",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"API",
+								"Exportacion",
+								"Documentos",
+								"GetDocumentos",
+								"ASDFGHJQWERTYASDGZXCV"
+							]
+						},
+						"description": "Nota: Devuelve cualquier vehículo que no esté eliminado"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "username",
+				"value": "MjYvMTAvMjAxNiAwMTowNTo1NiNDQVRlIzIjQVpFTEVSIERPQ1VNRU5UQUNJP04=",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URL",
+			"value": "https://api.azelerecambios.com"
+		}
+	]
+}

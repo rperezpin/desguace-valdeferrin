@@ -1,0 +1,176 @@
+---
+export const prerender = false;
+import Layout from '../../layouts/Layout.astro';
+import { site } from '../../data/site';
+---
+
+<Layout
+  title="Pedido Confirmado"
+  description="Su pedido ha sido registrado correctamente. Desguaces Valdeferrin."
+>
+  <section class="section-padding">
+    <div class="container-site">
+      <!-- Loading -->
+      <div id="confirm-loading" class="text-center py-16">
+        <div class="spinner"></div>
+        <p class="text-grey-600 mt-4 text-sm">Consultando estado del pedido...</p>
+      </div>
+
+      <!-- Success -->
+      <div id="confirm-success" class="hidden text-center py-16 max-w-lg mx-auto">
+        <div class="w-20 h-20 rounded-full bg-primary-50 flex items-center justify-center mx-auto mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-primary-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <h1 class="font-display font-bold text-3xl text-dark mb-3">Pedido registrado</h1>
+        <p class="text-grey-600 mb-2">Su pedido ha sido registrado correctamente.</p>
+        <p class="text-sm text-grey-500 mb-6">Numero de pedido: <strong id="order-number" class="text-dark"></strong></p>
+        <p id="order-status-text" class="text-sm text-grey-600 mb-8"></p>
+
+        <!-- Pending second order banner -->
+        <div id="pending-order-banner" class="hidden bg-accent-50 border border-accent-200 rounded-xl p-6 mb-8">
+          <div class="flex items-center gap-3 mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-accent-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            <h3 class="font-display font-bold text-dark text-lg">Tiene un segundo pedido pendiente de pago</h3>
+          </div>
+          <p class="text-sm text-grey-600 mb-4">Su carrito tenia productos de distintos proveedores. Complete el pago del segundo pedido para finalizar su compra.</p>
+          <p class="text-sm text-grey-500 mb-4">Pedido: <strong id="pending-order-number" class="text-dark"></strong> — Total: <strong id="pending-order-total" class="text-accent-700"></strong></p>
+          <button id="pay-pending-order" class="btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+            Pagar segundo pedido
+          </button>
+        </div>
+
+        <!-- Order items -->
+        <div id="order-items" class="text-left bg-light rounded-xl p-6 border border-grey-200 mb-8"></div>
+
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <a href="/recambios" class="btn-primary">
+            Seguir comprando
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+          </a>
+          <a href="/" class="btn-secondary" style="font-size: 0.75rem;">
+            Volver al inicio
+          </a>
+        </div>
+      </div>
+
+      <!-- Error -->
+      <div id="confirm-error" class="hidden text-center py-16">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto text-grey-400 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <p class="text-grey-600 text-lg">No se ha podido cargar la informacion del pedido</p>
+        <p class="text-grey-400 text-sm mt-2">Si ha realizado el pago, no se preocupe. Recibira un email de confirmacion.</p>
+        <a href="/" class="btn-primary mt-6" style="font-size: 0.75rem;">Volver al inicio</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  import { clearCart } from '../../lib/cart-store';
+
+  const $loading = document.getElementById('confirm-loading')!;
+  const $success = document.getElementById('confirm-success')!;
+  const $error = document.getElementById('confirm-error')!;
+
+  function escapeHtml(text: string): string {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  async function loadOrder() {
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get('id');
+    const orderKey = params.get('key') || '';
+
+    if (!orderId) {
+      $loading.classList.add('hidden');
+      $error.classList.remove('hidden');
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/orders/${orderId}?key=${encodeURIComponent(orderKey)}`);
+
+      if (!res.ok) {
+        throw new Error('Order not found');
+      }
+
+      const order = await res.json();
+
+      // Clear cart
+      clearCart();
+
+      // Show order info
+      document.getElementById('order-number')!.textContent = `#${order.number}`;
+
+      const statusMap: Record<string, string> = {
+        'pending': 'Pendiente de pago. Complete el pago para procesar su pedido.',
+        'processing': 'Pago recibido. Estamos preparando su pedido.',
+        'on-hold': 'En espera. Le contactaremos pronto.',
+        'completed': 'Pedido completado y enviado.',
+        'cancelled': 'Este pedido ha sido cancelado.',
+        'refunded': 'Este pedido ha sido reembolsado.',
+        'failed': 'El pago ha fallado. Intentelo de nuevo.',
+      };
+      document.getElementById('order-status-text')!.textContent = statusMap[order.status] || `Estado: ${order.status}`;
+
+      // Render items
+      const $items = document.getElementById('order-items')!;
+      if (order.lineItems && order.lineItems.length > 0) {
+        $items.innerHTML = `
+          <h3 class="font-display font-bold text-sm uppercase tracking-wider text-dark mb-3">Productos</h3>
+          ${order.lineItems.map((item: any) => `
+            <div class="flex justify-between text-sm py-2 border-b border-grey-200 last:border-0">
+              <span class="text-grey-600">${escapeHtml(item.name)} x${item.quantity}</span>
+              <span class="font-semibold text-dark">${parseFloat(item.total).toFixed(2)}&euro;</span>
+            </div>
+          `).join('')}
+          <div class="flex justify-between text-lg font-bold mt-3 pt-3 border-t border-grey-200">
+            <span class="text-dark">Total</span>
+            <span class="text-accent-700">${parseFloat(order.total).toFixed(2)}&euro;</span>
+          </div>
+        `;
+      }
+
+      $loading.classList.add('hidden');
+      $success.classList.remove('hidden');
+
+      // Comprobar si hay un segundo pedido pendiente de pago
+      checkPendingOrder();
+    } catch {
+      // Even if API fails, clear cart (payment may have succeeded)
+      clearCart();
+      $loading.classList.add('hidden');
+      $error.classList.remove('hidden');
+    }
+  }
+
+  function checkPendingOrder() {
+    try {
+      const raw = sessionStorage.getItem('pendingOrder');
+      if (!raw) return;
+
+      const pending = JSON.parse(raw);
+      if (!pending?.paymentUrl) return;
+
+      const $banner = document.getElementById('pending-order-banner')!;
+      const $number = document.getElementById('pending-order-number')!;
+      const $total = document.getElementById('pending-order-total')!;
+      const $payBtn = document.getElementById('pay-pending-order')!;
+
+      $number.textContent = `#${pending.orderNumber}`;
+      $total.textContent = `${parseFloat(pending.total).toFixed(2)}\u20AC`;
+      $banner.classList.remove('hidden');
+
+      $payBtn.addEventListener('click', () => {
+        sessionStorage.removeItem('pendingOrder');
+        window.location.href = pending.paymentUrl;
+      });
+    } catch {
+      sessionStorage.removeItem('pendingOrder');
+    }
+  }
+
+  loadOrder();
+</script>

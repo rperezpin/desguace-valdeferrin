@@ -1,0 +1,288 @@
+---
+export const prerender = false;
+import Layout from '../layouts/Layout.astro';
+import { site } from '../data/site';
+---
+
+<Layout
+  title="Finalizar Compra"
+  description="Complete sus datos para finalizar la compra. Desguaces Valdeferrin."
+>
+  <!-- Header -->
+  <section class="bg-primary-700 text-white py-10">
+    <div class="container-site">
+      <h1 class="font-display font-bold text-3xl md:text-4xl mb-2">Finalizar Compra</h1>
+      <p class="text-primary-200">Complete sus datos para realizar el pedido.</p>
+    </div>
+  </section>
+
+  <section class="section-padding">
+    <div class="container-site">
+      <div class="lg:flex lg:gap-10">
+        <!-- Left: Form -->
+        <div class="lg:w-2/3 mb-8 lg:mb-0">
+          <form id="checkout-form" class="space-y-8" novalidate>
+            <!-- Billing -->
+            <div>
+              <h2 class="font-display font-bold text-lg text-dark mb-4 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                Datos de facturacion
+              </h2>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="billing_first_name" class="text-xs text-grey-600 block mb-1">Nombre *</label>
+                  <input type="text" id="billing_first_name" name="billing_first_name" required
+                    class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+                </div>
+                <div>
+                  <label for="billing_last_name" class="text-xs text-grey-600 block mb-1">Apellidos *</label>
+                  <input type="text" id="billing_last_name" name="billing_last_name" required
+                    class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+                </div>
+                <div class="sm:col-span-2">
+                  <label for="billing_email" class="text-xs text-grey-600 block mb-1">Email *</label>
+                  <input type="email" id="billing_email" name="billing_email" required
+                    class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+                </div>
+                <div>
+                  <label for="billing_phone" class="text-xs text-grey-600 block mb-1">Telefono *</label>
+                  <input type="tel" id="billing_phone" name="billing_phone" required
+                    class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+                </div>
+                <div>
+                  <label for="billing_postcode" class="text-xs text-grey-600 block mb-1">Codigo postal *</label>
+                  <input type="text" id="billing_postcode" name="billing_postcode" required
+                    class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+                </div>
+                <div class="sm:col-span-2">
+                  <label for="billing_address" class="text-xs text-grey-600 block mb-1">Direccion *</label>
+                  <input type="text" id="billing_address" name="billing_address" required
+                    class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+                </div>
+                <div>
+                  <label for="billing_city" class="text-xs text-grey-600 block mb-1">Ciudad *</label>
+                  <input type="text" id="billing_city" name="billing_city" required
+                    class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+                </div>
+                <div>
+                  <label for="billing_state" class="text-xs text-grey-600 block mb-1">Provincia *</label>
+                  <input type="text" id="billing_state" name="billing_state" required
+                    class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Shipping -->
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <h2 class="font-display font-bold text-lg text-dark flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                  Datos de envio
+                </h2>
+                <label class="flex items-center gap-2 text-sm text-grey-600 cursor-pointer">
+                  <input type="checkbox" id="same_as_billing" checked
+                    class="rounded border-grey-300 text-primary-700 focus:ring-primary-500" />
+                  Igual que facturacion
+                </label>
+              </div>
+              <div id="shipping-fields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="shipping_first_name" class="text-xs text-grey-600 block mb-1">Nombre *</label>
+                  <input type="text" id="shipping_first_name" name="shipping_first_name"
+                    class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+                </div>
+                <div>
+                  <label for="shipping_last_name" class="text-xs text-grey-600 block mb-1">Apellidos *</label>
+                  <input type="text" id="shipping_last_name" name="shipping_last_name"
+                    class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+                </div>
+                <div class="sm:col-span-2">
+                  <label for="shipping_address" class="text-xs text-grey-600 block mb-1">Direccion *</label>
+                  <input type="text" id="shipping_address" name="shipping_address"
+                    class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+                </div>
+                <div>
+                  <label for="shipping_city" class="text-xs text-grey-600 block mb-1">Ciudad *</label>
+                  <input type="text" id="shipping_city" name="shipping_city"
+                    class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+                </div>
+                <div>
+                  <label for="shipping_state" class="text-xs text-grey-600 block mb-1">Provincia *</label>
+                  <input type="text" id="shipping_state" name="shipping_state"
+                    class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+                </div>
+                <div>
+                  <label for="shipping_postcode" class="text-xs text-grey-600 block mb-1">Codigo postal *</label>
+                  <input type="text" id="shipping_postcode" name="shipping_postcode"
+                    class="w-full px-3 py-2.5 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Error message -->
+            <div id="checkout-error" class="hidden bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-4"></div>
+
+            <!-- Submit -->
+            <button type="submit" id="checkout-submit" class="btn-primary" style="width: 100%;">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+              Realizar pedido
+            </button>
+          </form>
+        </div>
+
+        <!-- Right: Order summary -->
+        <div class="lg:w-1/3">
+          <div class="bg-light rounded-xl p-6 border border-grey-200 sticky top-28">
+            <h2 class="font-display font-bold text-lg text-dark mb-4">Tu pedido</h2>
+            <div id="checkout-items" class="space-y-3 mb-4 max-h-72 overflow-y-auto"></div>
+            <hr class="border-grey-200 my-3" />
+            <div class="flex justify-between text-lg">
+              <span class="font-display font-bold text-dark">Total</span>
+              <span id="checkout-total" class="font-display font-bold text-accent-700"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  import { getCartState, clearCart } from '../lib/cart-store';
+
+  const state = getCartState();
+
+  // Redirect to cart if empty
+  if (state.itemCount === 0) {
+    window.location.href = '/carrito';
+  }
+
+  function escapeHtml(text: string): string {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // Render order summary
+  const $checkoutItems = document.getElementById('checkout-items')!;
+  const $checkoutTotal = document.getElementById('checkout-total')!;
+
+  $checkoutItems.innerHTML = state.items.map(item => `
+    <div class="flex gap-3 text-sm">
+      <div class="w-12 h-12 rounded bg-grey-200 overflow-hidden flex-shrink-0">
+        <img src="${item.product.image}" alt="${escapeHtml(item.product.name)}" class="w-full h-full object-cover" />
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="font-medium text-dark line-clamp-1">${escapeHtml(item.product.name)}</p>
+        <p class="text-grey-500">${item.quantity} x ${(item.product.price || 0).toFixed(2)}&euro;</p>
+      </div>
+      <span class="font-semibold text-dark flex-shrink-0">${((item.product.price || 0) * item.quantity).toFixed(2)}&euro;</span>
+    </div>
+  `).join('');
+
+  $checkoutTotal.textContent = `${state.subtotal.toFixed(2)}\u20AC`;
+
+  // Toggle shipping fields
+  const $sameAsBilling = document.getElementById('same_as_billing') as HTMLInputElement;
+  const $shippingFields = document.getElementById('shipping-fields')!;
+
+  $sameAsBilling.addEventListener('change', () => {
+    $shippingFields.classList.toggle('hidden', $sameAsBilling.checked);
+  });
+
+  // Form submission
+  const $form = document.getElementById('checkout-form') as HTMLFormElement;
+  const $error = document.getElementById('checkout-error')!;
+  const $submitBtn = document.getElementById('checkout-submit') as HTMLButtonElement;
+
+  $form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    $error.classList.add('hidden');
+    $submitBtn.disabled = true;
+    $submitBtn.textContent = 'Procesando...';
+
+    const getValue = (id: string) => (document.getElementById(id) as HTMLInputElement)?.value || '';
+
+    const billing = {
+      first_name: getValue('billing_first_name'),
+      last_name: getValue('billing_last_name'),
+      email: getValue('billing_email'),
+      phone: getValue('billing_phone'),
+      address_1: getValue('billing_address'),
+      city: getValue('billing_city'),
+      state: getValue('billing_state'),
+      postcode: getValue('billing_postcode'),
+      country: 'ES',
+    };
+
+    const shipping = $sameAsBilling.checked ? {
+      first_name: billing.first_name,
+      last_name: billing.last_name,
+      address_1: billing.address_1,
+      city: billing.city,
+      state: billing.state,
+      postcode: billing.postcode,
+      country: 'ES',
+    } : {
+      first_name: getValue('shipping_first_name'),
+      last_name: getValue('shipping_last_name'),
+      address_1: getValue('shipping_address'),
+      city: getValue('shipping_city'),
+      state: getValue('shipping_state'),
+      postcode: getValue('shipping_postcode'),
+      country: 'ES',
+    };
+
+    const items = state.items.map(item => ({
+      productId: item.product.id,
+      quantity: item.quantity,
+      name: item.product.name,
+      price: item.product.price,
+      priceWithoutTax: item.product.priceWithoutTax,
+    }));
+
+    try {
+      const res = await fetch('/api/cart/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items, billing, shipping }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Error al crear el pedido');
+      }
+
+      // Clear cart
+      clearCart();
+
+      const orders = data.orders as {
+        orderId: number;
+        orderNumber: string;
+        total: string;
+        paymentUrl: string;
+        orderKey: string;
+        source: string;
+      }[];
+
+      if (orders.length > 1) {
+        // Guardar segundo pedido para pagar despues del primero
+        sessionStorage.setItem('pendingOrder', JSON.stringify(orders[1]));
+      }
+
+      // Redirigir al pago del primer pedido
+      const first = orders[0];
+      if (first.paymentUrl) {
+        window.location.href = first.paymentUrl;
+      } else {
+        window.location.href = `/pedido/confirmacion?id=${first.orderId}&key=${first.orderKey}`;
+      }
+    } catch (err) {
+      $error.textContent = err instanceof Error ? err.message : 'Ha ocurrido un error. Intentelo de nuevo.';
+      $error.classList.remove('hidden');
+      $submitBtn.disabled = false;
+      $submitBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg> Realizar pedido`;
+    }
+  });
+</script>

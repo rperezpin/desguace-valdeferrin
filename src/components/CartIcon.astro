@@ -1,0 +1,42 @@
+---
+// Icono del carrito para el header — el badge se actualiza con JS
+---
+<div class="relative">
+  <a
+    href="/carrito"
+    id="cart-icon-link"
+    class="flex items-center justify-center w-10 h-10 text-primary-700 hover:text-accent-500 transition-colors"
+    aria-label="Ver carrito"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="8" cy="21" r="1" /><circle cx="19" cy="21" r="1" />
+      <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+    </svg>
+    <span
+      id="cart-badge"
+      class="hidden absolute -top-1 -right-1 bg-accent-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center"
+    >0</span>
+  </a>
+</div>
+
+<script>
+  import { getCartState } from '../lib/cart-store';
+
+  function updateBadge() {
+    const badge = document.getElementById('cart-badge');
+    if (!badge) return;
+    const state = getCartState();
+    if (state.itemCount > 0) {
+      badge.textContent = String(state.itemCount > 99 ? '99+' : state.itemCount);
+      badge.classList.remove('hidden');
+      badge.classList.add('cart-badge-pulse');
+      setTimeout(() => badge.classList.remove('cart-badge-pulse'), 300);
+    } else {
+      badge.classList.add('hidden');
+    }
+  }
+
+  updateBadge();
+  window.addEventListener('cart:updated', updateBadge);
+</script>

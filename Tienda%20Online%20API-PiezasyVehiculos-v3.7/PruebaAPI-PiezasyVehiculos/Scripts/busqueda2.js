@@ -1,0 +1,390 @@
+﻿/******************* API CAT-e *******************/
+var pagesCount = 0;
+var loader = 0;
+
+$(function () {
+    //if (document.images) {
+    //    img1 = new Image();
+    //    img1.src = "Images/expand.png";
+    //}
+    if (!$.support.cors)
+        alert("CORS NOT supported!")
+    $.ajaxSetup({
+        complete: function () { showloader(-1); }
+    });
+    GetTipos();
+
+    $(".cabecera2").each(function () {
+        $header = $(this);
+        $content = $header.next();
+        if ($content.is(":visible")) {
+            $header.removeClass("panel_active");
+        }
+        else {
+            $header.addClass("panel_active");
+        }
+    });
+    $(".cabecera2").click(function () {
+        $header = $(this);
+        $content = $header.next();
+        $content.slideToggle(400, function () {
+            $header.toggleClass('panel_active');
+            if ($header.attr('id') == "cabecera1") {
+                $("#cabecera2").toggleClass('panel_active');
+                $("#cabecera2").next().slideToggle(150);
+            }
+            else {
+                $("#cabecera1").toggleClass('panel_active');
+                $("#cabecera1").next().slideToggle(150);
+            }
+        });
+    });
+});
+
+function GetTipos() {
+    var url = apiUrl + 'V1/Catalogo/GetTipos/';
+    $('#Tipo').empty();
+    $.ajax({
+        type: 'GET',
+        dataType: "json",
+        //contentType: "text/html;charset=UTF-8",
+        //contentType: "application/json; charset=utf-8",
+        url: url,
+        crossDomain: true,
+        beforeSend: setHeader,
+        success: function (data) {
+            $.each(data, function (key, item) {
+                $('<option>', { value: item.CodTipoVehiculo }).text(item.Descripcion).appendTo($('#Tipo'));
+            });
+            if (data.length > 0)
+                GetSubTipos();
+        },
+        error: function (jqXHR, textStatus, err) {
+            alert("ERROR(1): " + err);
+        }
+    });
+}
+function GetSubTipos() {
+    var tipo = $("#Tipo").find(":selected").val();
+    var url = apiUrl + 'V1/Catalogo/GetSubTipos/' + tipo;
+    $('#SubTipo').empty();
+    $('#Marca').empty();
+    $('#Modelo').empty();
+    $('#Version').empty();
+    $('#Motor').empty();
+    $('<option>', { value: "" }).text("-- Seleccione --").appendTo($('#Marca'));
+    $('<option>', { value: "" }).text("-- Seleccione --").appendTo($('#Modelo'));
+    $('<option>', { value: "" }).text("-- Seleccione --").appendTo($('#Version'));
+    $('<option>', { value: "" }).text("-- Seleccione --").appendTo($('#Motor'));
+    $.ajax({
+        type: 'GET',
+        dataType: "json",
+        url: url,
+        //jsonpCallback: 'JsonpCallback',
+        //crossDomain: true,
+        beforeSend: setHeader,
+        success: function (data) {
+            $.each(data, function (key, item) {
+                $('<option>', { value: item.CodTipoVehiculo }).text(item.Descripcion).appendTo($('#SubTipo'));
+            });
+            if (data.length > 0) {
+                GetMarcas();
+            }
+            if (data.length > 1)
+                $("#trSubTipo").css("display", "");
+            else
+                $("#trSubTipo").css("display", "none");
+        },
+        error: function (jqXHR, textStatus, err) {
+            alert("ERROR(2): " + err);
+        }
+    });
+}
+function GetMarcas() {
+    var tipo = $("#SubTipo").find(":selected").val();
+    var url = apiUrl + 'V1/Catalogo/GetMarcas/' + tipo;
+    $('#Marca').empty();
+    $('#Modelo').empty();
+    $('#Version').empty();
+    $('#Motor').empty();
+    $('<option>', { value: "-1" }).text("-- Seleccione --").appendTo($('#Marca'));
+    $('<option>', { value: "-1" }).text("-- Seleccione --").appendTo($('#Modelo'));
+    $('<option>', { value: "-1" }).text("-- Seleccione --").appendTo($('#Version'));
+    $('<option>', { value: "-1" }).text("-- Seleccione --").appendTo($('#Motor'));
+    $.ajax({
+        type: 'GET',
+        dataType: "json",
+        url: url,
+        //crossDomain: true,
+        beforeSend: setHeader,
+        success: function (data) {
+            $.each(data, function (key, item) {
+                $('<option>', { value: item.CodMarca }).text(item.Descripcion).appendTo($('#Marca'));
+            });
+            if (data.length > 0)
+                GetModelos();
+        },
+        error: function (jqXHR, textStatus, err) {
+            alert("ERROR(3): " + err);
+        }
+    });
+}
+function GetModelos() {
+    var marca = $("#Marca").find(":selected").val();
+    var url = apiUrl + 'V1/Catalogo/GetModelos/' + marca;
+    $('#Modelo').empty();
+    $('#Version').empty();
+    $('#Motor').empty();
+    $('<option>', { value: "-1" }).text("-- Seleccione --").appendTo($('#Modelo'));
+    $('<option>', { value: "-1" }).text("-- Seleccione --").appendTo($('#Version'));
+    $('<option>', { value: "-1" }).text("-- Seleccione --").appendTo($('#Motor'));
+    if (marca != "-1") {
+        $.ajax({
+            type: 'GET',
+            dataType: "json",
+            url: url,
+            beforeSend: setHeader,
+            success: function (data) {
+                $.each(data, function (key, item) {
+                    $('<option>', { value: item.CodModelo }).text(item.Descripcion).appendTo($('#Modelo'));
+                });
+                if (data.length == 1) {
+                    $("#Modelo option[value='-1']").remove();
+                    GetVersiones();
+                }
+            },
+            error: function (jqXHR, textStatus, err) {
+                alert("ERROR(4): " + err);
+            }
+        });
+    }
+}
+function GetVersiones() {
+    var marca = $("#Marca").find(":selected").val();
+    var modelo = $("#Modelo").find(":selected").val();
+    var url = apiUrl + 'V1/Catalogo/GetVersiones/' + marca + '/' + modelo;
+    $('#Version').empty();
+    $('#Motor').empty();
+    $('<option>', { value: "-1" }).text("-- Seleccione --").appendTo($('#Version'));
+    $('<option>', { value: "-1" }).text("-- Seleccione --").appendTo($('#Motor'));
+    if (modelo != "-1") {
+        $.ajax({
+            type: 'GET',
+            dataType: "json",
+            url: url,
+            crossDomain: true,
+            beforeSend: setHeader,
+            success: function (data) {
+                $.each(data, function (key, item) {
+                    $('<option>', { value: item.CodVersion }).text(item.Descripcion).appendTo($('#Version'));
+                });
+                if (data.length == 1) {
+                    $("#Version option[value='-1']").remove();
+                    //GetMotores();
+                }
+            },
+            error: function (jqXHR, textStatus, err) {
+                alert("ERROR(5): " + err);
+            }
+        });
+    }
+}
+function GetMotores() {
+    var tipo = $("#SubTipo").find(":selected").val();
+    var marca = $("#Marca").find(":selected").val();
+    var modelo = $("#Modelo").find(":selected").val();
+    var version = $("#Version").find(":selected").val();
+    var url = apiUrl + 'V1/Catalogo/GetMotores/' + tipo + '/' + marca + '/' + modelo + '/' + version;
+    $('#Motor').empty();
+    $('<option>', { value: "-1" }).text("-- Seleccione --").appendTo($('#Motor'));
+    if (version != "-1") {
+        $.ajax({
+            type: 'GET',
+            dataType: "json",
+            url: url,
+            crossDomain: true,
+            beforeSend: setHeader,
+            success: function (data) {
+                $.each(data, function (key, item) {
+                    $('<option>', { value: item.CodMotor }).text(item.Descripcion).appendTo($('#Motor'));
+                });
+                if (data.length == 1) {
+                    $("#Motor option[value='-1']").remove();
+                }
+            },
+            error: function (jqXHR, textStatus, err) {
+                alert("ERROR(7): " + err);
+            }
+        });
+    }
+}
+
+function BusquedaRapida() {
+    var str = document.getElementById("txtDescripcion").value;
+    var url = apiUrl + 'V1/Vehiculos/GetNumVehiculos/' + str;
+    $('#pager').empty();
+    $("#pager").append("&nbsp;");
+    $.ajax({
+        type: 'GET',
+        dataType: "json",
+        url: url,
+        crossDomain: true,
+        beforeSend: setHeader,
+        success: function (data) {
+            if (data > 0) {
+                pagesCount = 0;
+                for (pagesCount = 0; pagesCount < data / 10; pagesCount++) { }
+                BusquedaRapidaPagina(0);
+                $("#divNoResultados").hide();
+                $("#divResultados").show();
+            }
+            else {
+                $("#divResultados").hide();
+                $("#divNoResultados").show();
+            }
+        },
+        error: function (jqXHR, textStatus, err) {
+            alert("ERROR(R): " + err);
+        }
+    });
+}
+
+function BusquedaRapidaPagina(pagina) {
+    var str = document.getElementById("txtDescripcion").value;
+    var url = apiUrl + 'V1/Vehiculos/GetVehiculos/' + str + '/' + pagina + '/10';
+    $("#pager").paginate({
+        count: pagesCount,
+        start: pagina + 1,
+        display: 10,
+        border: true,
+        border_color: '#c1d4fb',
+        text_color: '#333',
+        background_color: '#6a95d1',
+        border_hover_color: '#ccc',
+        text_hover_color: '#FFF',
+        background_hover_color: '#4800ff',
+        images: false,
+        mouse: 'press',
+        onChange: function (page) {
+            BusquedaRapidaPagina(page - 1);
+        }
+    });
+    $.ajax({
+        type: 'GET',
+        dataType: "json",
+        url: url,
+        crossDomain: true,
+        beforeSend: setHeader,
+        success: function (data) {
+            $('#vehiculos').empty();
+            $.each(data, function (key, item) {
+                $('<tr>', { html: formatVehiculo(item) }).appendTo($('#vehiculos'));
+            });
+        },
+        error: function (jqXHR, textStatus, err) {
+            alert("ERROR(R): " + err);
+        }
+    });
+}
+
+function BusquedaAvanzada() {
+    var tipo = $("#SubTipo").find(":selected").val();
+    var marca = $("#Marca").find(":selected").val();
+    var modelo = $("#Modelo").find(":selected").val();
+    var version = $("#Version").find(":selected").val();
+    var motor = $("#Motor").find(":selected").val();
+    var url = apiUrl + 'V1/Vehiculos/GetNumVehiculos/' + tipo + '/' + marca + '/' + modelo + '/' + version + '/' + motor;
+    $('#pager').empty();
+    $("#pager").append("&nbsp;");
+    $.ajax({
+        type: 'GET',
+        dataType: "json",
+        url: url,
+        //crossDomain: true,
+        beforeSend: setHeader,
+        success: function (data) {
+            if (data > 0) {
+                pagesCount = 0;
+                for (pagesCount = 0; pagesCount < data / 10; pagesCount++) { }
+                BusquedaAvanzadaPagina(0);
+                $("#divNoResultados").hide();
+                $("#divResultados").show();
+            }
+            else {
+                $("#divResultados").hide();
+                $("#divNoResultados").show();
+            }
+        },
+        error: function (jqXHR, textStatus, err) {
+            alert("ERROR(A): " + err);
+        }
+    });
+}
+
+function BusquedaAvanzadaPagina(pagina) {
+    var tipo = $("#SubTipo").find(":selected").val();
+    var marca = $("#Marca").find(":selected").val();
+    var modelo = $("#Modelo").find(":selected").val();
+    var version = $("#Version").find(":selected").val();
+    var motor = $("#Motor").find(":selected").val();
+    var url = apiUrl + 'V1/Vehiculos/GetVehiculos/' + tipo + '/' + marca + '/' + modelo + '/' + version + '/' + motor + '/' + pagina + '/10';
+    $("#pager").paginate({
+        count: pagesCount,
+        start: pagina + 1,
+        display: 10,
+        border: true,
+        border_color: '#c1d4fb',
+        text_color: '#333',
+        background_color: '#6a95d1',
+        border_hover_color: '#ccc',
+        text_hover_color: '#FFF',
+        background_hover_color: '#4800ff',
+        images: false,
+        mouse: 'press',
+        onChange: function (page) {
+            BusquedaAvanzadaPagina(page - 1);
+        }
+    });
+    $.ajax({
+        type: 'GET',
+        dataType: "json",
+        url: url,
+        crossDomain: true,
+        beforeSend: setHeader,
+        success: function (data) {
+            $('#vehiculos').empty();
+            $.each(data, function (key, item) {
+                $('<tr>', { html: formatVehiculo(item) }).appendTo($('#vehiculos'));
+            });
+        },
+        error: function (jqXHR, textStatus, err) {
+            alert("ERROR(A): " + err);
+        }
+    });
+}
+
+function setHeader(xhr) {
+    showloader(1);
+    xhr.setRequestHeader('Authorization', 'Basic ' + apiKey);
+    //xhr.withCredentials = true;
+}
+
+function showloader(cont) {
+    loader = loader + cont;
+    if (loader < 1)
+        $('#loader').fadeOut("fast");
+    else
+        $('#loader').fadeIn("fast");
+}
+
+function formatVehiculo(item) {
+    var str = '';
+    str += item.Fotos != null && item.Fotos != undefined ? $("<div>").append($("<td>").attr("style", "width:50px;").append($("<img>").attr("style", "width:50px;").attr("src", "data:image/png;base64," + item.Fotos[0]))).remove().html() : $("<div>").append($("<td>").attr("style", "width:50px;").append("&nbsp;")).remove().html();
+    str += '<td>' + item.Tipo + '</td>';
+    str += '<td>' + item.Marca + '</td>';
+    str += '<td>' + (item.Modelo != null ? item.Modelo : "-") + '</td>';
+    str += '<td>' + (item.Version != null ? item.Version : "-") + '</td>';
+    str += '<td>' + (item.Motor != null ? item.Motor : "-") + '</td>';
+    str += '<td>' + $("<div>").append($("<a>").attr("href", "Vehiculo.html?id=" + item.IdVehiculo).attr("target", "_blank").append("Ver")).remove().html() + '</td>';
+    return str;
+}

@@ -1,17 +1,21 @@
 export const site = {
   name: 'Desguaces Valdeferrin',
+  razonSocial: 'Desguaces Valdeferrin SL',
+  cif: 'B99038317',
   slogan: 'Tu Desguace de Confianza',
-  description: 'Centro Autorizado de Tratamiento de Vehiculos (CATV) en Ejea de los Caballeros, Zaragoza. Venta de recambios de segunda mano con garantia, gestion de bajas definitivas y tasacion de vehiculos.',
+  description: 'Centro Autorizado de Tratamiento de Vehiculos (CATV) en Ejea de los Caballeros, Zaragoza. Venta de recambios de segunda mano con garantia, gestion de bajas definitivas, tasacion de vehiculos y gestion oficial de residuos y metales.',
   url: 'https://desguacesvaldeferrin.es',
 
-  phone: '976 66 00 00',
-  phoneHref: 'tel:+34976660000',
-  whatsapp: '34976660000',
-  whatsappUrl: 'https://wa.me/34976660000?text=Hola%2C%20me%20interesa%20consultar%20sobre%20una%20pieza',
-  email: 'info@desguacesvaldeferrin.es',
+  phone: '609 720 031',
+  phoneHref: 'tel:+34609720031',
+  phoneBajas: '976 660 108',
+  phoneBajasHref: 'tel:+34976660108',
+  whatsapp: '34609720031',
+  whatsappUrl: 'https://wa.me/34609720031?text=Hola%2C%20me%20interesa%20consultar%20sobre%20una%20pieza',
+  email: 'ventas@desguacesvaldeferrin.es',
 
   address: {
-    street: 'Ctra. de Erla, s/n',
+    street: 'Poligono Industrial Valdeferrin, Calle D, Parcela 80/81',
     city: 'Ejea de los Caballeros',
     province: 'Zaragoza',
     region: 'Aragon',
@@ -25,8 +29,9 @@ export const site = {
   },
 
   horario: {
-    lunesViernes: '09:00 - 14:00 / 16:00 - 19:00',
-    sabado: '09:00 - 13:00',
+    lunesJueves: '07:00 - 18:00',
+    viernes: '07:00 - 15:00',
+    sabado: 'Cerrado',
     domingo: 'Cerrado',
   },
 

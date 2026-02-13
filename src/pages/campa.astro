@@ -1,14 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-const vehiculos = [
-  { id: 1, marca: 'Seat', modelo: 'Leon', anio: 2019, motor: '2.0 TDI', color: 'Blanco', estado: 'En proceso', imagen: '/images/placeholder-pieza.svg' },
-  { id: 2, marca: 'Volkswagen', modelo: 'Golf VII', anio: 2017, motor: '1.6 TDI', color: 'Gris', estado: 'En proceso', imagen: '/images/placeholder-pieza.svg' },
-  { id: 3, marca: 'Opel', modelo: 'Astra J', anio: 2014, motor: '1.7 CDTI', color: 'Negro', estado: 'Completado', imagen: '/images/placeholder-pieza.svg' },
-  { id: 4, marca: 'Renault', modelo: 'Megane III', anio: 2016, motor: '1.5 DCI', color: 'Azul', estado: 'En proceso', imagen: '/images/placeholder-pieza.svg' },
-  { id: 5, marca: 'Ford', modelo: 'Focus III', anio: 2018, motor: '1.0 EcoBoost', color: 'Rojo', estado: 'En proceso', imagen: '/images/placeholder-pieza.svg' },
-  { id: 6, marca: 'Peugeot', modelo: '308', anio: 2015, motor: '1.6 HDI', color: 'Plata', estado: 'Completado', imagen: '/images/placeholder-pieza.svg' },
-];
+import { site } from '../data/site';
 ---
 
 <Layout
@@ -23,52 +15,221 @@ const vehiculos = [
     </div>
   </section>
 
+  <!-- Search -->
+  <section class="bg-white border-b border-grey-200 py-6">
+    <div class="container-site">
+      <form id="vehicle-search-form" class="flex flex-col sm:flex-row gap-3 max-w-xl">
+        <input
+          id="vehicle-search-input"
+          type="text"
+          placeholder="Buscar vehiculo (Ej: Seat Leon, Volkswagen Golf...)"
+          class="flex-1 px-4 py-3 border border-grey-200 rounded-md text-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+        />
+        <button type="submit" class="btn-primary" style="padding-top: 0.75rem; padding-bottom: 0.75rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          Buscar
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Results -->
   <section class="section-padding">
     <div class="container-site">
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {vehiculos.map((v) => (
-          <article class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group border border-grey-200">
-            <div class="relative aspect-[16/10] overflow-hidden bg-grey-200">
-              <img
-                src={v.imagen}
-                alt={`${v.marca} ${v.modelo} ${v.anio}`}
-                loading="lazy"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <span class:list={[
-                'absolute top-3 right-3 text-[10px] font-display font-bold uppercase tracking-wider px-2 py-1 rounded',
-                v.estado === 'En proceso' ? 'bg-accent-500 text-white' : 'bg-grey-600 text-white'
-              ]}>
-                {v.estado}
-              </span>
-            </div>
+      <p id="vehicle-count" class="text-sm text-grey-600 mb-6"></p>
 
-            <div class="p-5">
-              <h2 class="font-display font-bold text-lg text-dark">
-                {v.marca} {v.modelo}
-              </h2>
-              <div class="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-sm text-grey-600">
-                <span class="flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                  {v.anio}
-                </span>
-                <span class="flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                  {v.motor}
-                </span>
-                <span>{v.color}</span>
-              </div>
+      <!-- Vehicle grid -->
+      <div id="vehicle-grid" class="hidden grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
-              <a
-                href={`/recambios?q=${encodeURIComponent(v.marca + ' ' + v.modelo)}`}
-                class="btn-primary mt-4" style="width: 100%; font-size: 0.75rem;"
-              >
-                Ver piezas disponibles
-              </a>
-            </div>
-          </article>
-        ))}
+      <!-- Loading state -->
+      <div id="vehicle-loading" class="text-center py-16">
+        <div class="spinner"></div>
+        <p class="text-grey-600 mt-4 text-sm">Cargando vehiculos...</p>
+      </div>
+
+      <!-- Empty state -->
+      <div id="vehicle-empty" class="hidden text-center py-16">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto text-grey-400 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+        <p class="text-grey-600 text-lg">No se encontraron vehiculos</p>
+        <p class="text-grey-400 text-sm mt-2">Pruebe con otra busqueda o dejelo vacio para ver todos</p>
+      </div>
+
+      <!-- Error state -->
+      <div id="vehicle-error" class="hidden text-center py-16">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto text-red-400 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <p class="text-grey-600 text-lg">Error al cargar vehiculos</p>
+        <p class="text-grey-400 text-sm mt-2">Intentelo de nuevo mas tarde.</p>
+        <button id="vehicle-retry" class="btn-primary mt-4" style="font-size: 0.75rem;">Reintentar</button>
+      </div>
+
+      <!-- Pagination -->
+      <nav id="vehicle-pagination" class="hidden flex justify-center gap-1 mt-8" aria-label="Paginacion"></nav>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-primary-50 py-10">
+    <div class="container-site text-center">
+      <h2 class="font-display font-bold text-2xl text-dark mb-3">Busca una pieza concreta?</h2>
+      <p class="text-grey-600 mb-6">Consulte nuestro catalogo completo de recambios o contactenos directamente.</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="/recambios" class="btn-primary">
+          Ver catalogo de recambios
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+        <a href={site.whatsappUrl} target="_blank" rel="noopener noreferrer" class="btn-secondary">
+          Consultar por WhatsApp
+        </a>
       </div>
     </div>
   </section>
 </Layout>
+
+<script>
+  import { getNumVehiculos, getVehiculos } from '../lib/cate-api';
+  import { apiConfig } from '../data/api';
+  import type { Vehiculo } from '../lib/cate-types';
+
+  let currentPage = 0;
+  let totalItems = 0;
+  let lastSearchText = '';
+  const PER_PAGE = apiConfig.itemsPerPage;
+
+  const $form = document.getElementById('vehicle-search-form') as HTMLFormElement;
+  const $input = document.getElementById('vehicle-search-input') as HTMLInputElement;
+  const $grid = document.getElementById('vehicle-grid') as HTMLDivElement;
+  const $loading = document.getElementById('vehicle-loading') as HTMLDivElement;
+  const $empty = document.getElementById('vehicle-empty') as HTMLDivElement;
+  const $error = document.getElementById('vehicle-error') as HTMLDivElement;
+  const $count = document.getElementById('vehicle-count') as HTMLParagraphElement;
+  const $pagination = document.getElementById('vehicle-pagination') as HTMLElement;
+  const $retry = document.getElementById('vehicle-retry') as HTMLButtonElement;
+
+  function showState(state: 'loading' | 'results' | 'empty' | 'error') {
+    $loading.classList.toggle('hidden', state !== 'loading');
+    $grid.classList.toggle('hidden', state !== 'results');
+    $empty.classList.toggle('hidden', state !== 'empty');
+    $error.classList.toggle('hidden', state !== 'error');
+    $pagination.classList.toggle('hidden', state !== 'results');
+    $count.classList.toggle('hidden', state !== 'results');
+  }
+
+  function escapeHtml(text: string): string {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function renderVehicleCard(v: Vehiculo): string {
+    const foto = v.Fotos && v.Fotos.length > 0
+      ? `data:image/png;base64,${v.Fotos[0]}`
+      : '/images/placeholder-pieza.svg';
+    const marca = escapeHtml(v.Marca || '');
+    const modelo = escapeHtml(v.Modelo || '');
+    const motor = v.Motor ? escapeHtml(v.Motor) : '';
+    const color = v.Color ? escapeHtml(v.Color) : '';
+    const kms = v.Kms ? `${v.Kms.toLocaleString('es-ES')} km` : '';
+    const combustible = v.Combustible ? escapeHtml(v.Combustible) : '';
+    const searchQuery = encodeURIComponent(`${v.Marca || ''} ${v.Modelo || ''}`.trim());
+
+    return `
+      <article class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group border border-grey-200">
+        <div class="relative aspect-[16/10] overflow-hidden bg-grey-200">
+          <img src="${foto}" alt="${marca} ${modelo}" loading="lazy"
+               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+        </div>
+        <div class="p-5">
+          <h2 class="font-display font-bold text-lg text-dark">${marca} ${modelo}</h2>
+          <div class="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-sm text-grey-600">
+            ${motor ? `<span class="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>${motor}</span>` : ''}
+            ${color ? `<span>${color}</span>` : ''}
+            ${kms ? `<span>${kms}</span>` : ''}
+            ${combustible ? `<span>${combustible}</span>` : ''}
+          </div>
+          <a href="/recambios?q=${searchQuery}" class="btn-primary mt-4" style="width: 100%; font-size: 0.75rem;">
+            Ver piezas disponibles
+          </a>
+        </div>
+      </article>
+    `;
+  }
+
+  function renderPagination() {
+    const totalPages = Math.ceil(totalItems / PER_PAGE);
+    if (totalPages <= 1) { $pagination.innerHTML = ''; return; }
+
+    const startPage = Math.max(0, currentPage - 2);
+    const endPage = Math.min(totalPages - 1, currentPage + 2);
+    let html = '';
+
+    html += `<button data-page="${currentPage - 1}" ${currentPage === 0 ? 'disabled' : ''} class="px-3 py-2 text-sm rounded-md border ${currentPage === 0 ? 'border-grey-200 text-grey-400 cursor-not-allowed' : 'border-grey-200 text-dark hover:bg-primary-50 cursor-pointer'}">&laquo;</button>`;
+
+    if (startPage > 0) {
+      html += `<button data-page="0" class="px-3 py-2 text-sm rounded-md border border-grey-200 text-dark hover:bg-primary-50 cursor-pointer">1</button>`;
+      if (startPage > 1) html += `<span class="px-2 py-2 text-grey-400">...</span>`;
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      const isActive = i === currentPage;
+      html += `<button data-page="${i}" class="px-3 py-2 text-sm rounded-md border cursor-pointer ${isActive ? 'bg-primary-700 text-white border-primary-700' : 'border-grey-200 text-dark hover:bg-primary-50'}">${i + 1}</button>`;
+    }
+
+    if (endPage < totalPages - 1) {
+      if (endPage < totalPages - 2) html += `<span class="px-2 py-2 text-grey-400">...</span>`;
+      html += `<button data-page="${totalPages - 1}" class="px-3 py-2 text-sm rounded-md border border-grey-200 text-dark hover:bg-primary-50 cursor-pointer">${totalPages}</button>`;
+    }
+
+    html += `<button data-page="${currentPage + 1}" ${currentPage >= totalPages - 1 ? 'disabled' : ''} class="px-3 py-2 text-sm rounded-md border ${currentPage >= totalPages - 1 ? 'border-grey-200 text-grey-400 cursor-not-allowed' : 'border-grey-200 text-dark hover:bg-primary-50 cursor-pointer'}">&raquo;</button>`;
+
+    $pagination.innerHTML = html;
+
+    $pagination.querySelectorAll('button[data-page]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const page = parseInt((btn as HTMLButtonElement).dataset.page!);
+        const totalPages = Math.ceil(totalItems / PER_PAGE);
+        if (!isNaN(page) && page >= 0 && page < totalPages) {
+          currentPage = page;
+          searchVehicles(false);
+          window.scrollTo({ top: $grid.offsetTop - 100, behavior: 'smooth' });
+        }
+      });
+    });
+  }
+
+  async function searchVehicles(countFirst = true) {
+    showState('loading');
+
+    try {
+      if (countFirst) {
+        currentPage = 0;
+        totalItems = await getNumVehiculos(lastSearchText || ' ');
+      }
+
+      if (totalItems === 0) {
+        showState('empty');
+        $pagination.innerHTML = '';
+        return;
+      }
+
+      const vehiculos = await getVehiculos(lastSearchText || ' ', currentPage, PER_PAGE);
+      $grid.innerHTML = vehiculos.map(renderVehicleCard).join('');
+      $count.textContent = `${totalItems} vehiculo${totalItems !== 1 ? 's' : ''} encontrado${totalItems !== 1 ? 's' : ''}`;
+      renderPagination();
+      showState('results');
+    } catch (err) {
+      console.error('Error buscando vehiculos:', err);
+      showState('error');
+    }
+  }
+
+  $form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    lastSearchText = $input.value.trim();
+    searchVehicles(true);
+  });
+
+  $retry.addEventListener('click', () => searchVehicles(true));
+
+  // Load vehicles on page init
+  searchVehicles(true);
+</script>

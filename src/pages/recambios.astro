@@ -1,15 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import ProductCard from '../components/ProductCard.astro';
-import products from '../data/products.json';
-
-const categorias = [...new Set(products.map(p => p.categoria))];
-const marcas = [...new Set(products.map(p => p.marca))];
+import { site } from '../data/site';
 ---
 
 <Layout
   title="Recambios de Segunda Mano"
-  description="Catalogo de recambios de segunda mano con garantia. Piezas de coche revisadas: motores, faros, paragolpes, cajas de cambios y mas. Envio a toda Espana."
+  description="Catalogo de recambios de segunda mano con garantia. Busque piezas de coche revisadas: motores, faros, paragolpes, cajas de cambios y mas. Envio a toda Espana."
 >
   <!-- Page Header -->
   <section class="bg-primary-700 text-white py-10">
@@ -19,142 +15,706 @@ const marcas = [...new Set(products.map(p => p.marca))];
     </div>
   </section>
 
-  <section class="section-padding">
+  <!-- Quick Search -->
+  <section class="bg-white border-b border-grey-200 py-6">
     <div class="container-site">
-      <div class="lg:flex lg:gap-8">
-        <!-- Sidebar Filters -->
-        <aside class="lg:w-64 shrink-0 mb-8 lg:mb-0">
-          <div class="bg-white rounded-xl p-6 shadow-sm border border-grey-200 sticky top-24">
-            <h2 class="font-display font-bold text-sm uppercase tracking-wider text-dark mb-4">Filtros</h2>
+      <form id="quick-search-form" class="flex flex-col sm:flex-row gap-3">
+        <div class="flex-1 flex flex-col sm:flex-row gap-2">
+          <select
+            id="search-type"
+            class="px-3 py-3 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 sm:w-auto"
+          >
+            <option value="descripcion">Por descripcion</option>
+            <option value="referencia">Por referencia OEM/IAM</option>
+          </select>
+          <input
+            id="search-input"
+            type="text"
+            placeholder="Busque su pieza... (Ej: motor seat leon, faro volkswagen golf...)"
+            class="flex-1 px-4 py-3 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+          />
+        </div>
+        <button type="submit" class="btn-primary" style="padding-top: 0.75rem; padding-bottom: 0.75rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          Buscar
+        </button>
+      </form>
+    </div>
+  </section>
 
-            <!-- Search -->
-            <div class="mb-6">
-              <label class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-2">Buscar</label>
-              <input
-                type="text"
-                id="filter-search"
-                placeholder="Nombre de pieza..."
-                class="w-full px-3 py-2 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-              />
-            </div>
+  <!-- Advanced Search (collapsible) -->
+  <section class="bg-light border-b border-grey-200">
+    <div class="container-site">
+      <button
+        id="toggle-advanced"
+        type="button"
+        class="flex items-center gap-2 w-full py-4 text-sm font-display font-bold uppercase tracking-wider text-primary-700 hover:text-primary-800 transition-colors"
+      >
+        <svg id="adv-chevron" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        Busqueda avanzada
+      </button>
 
-            <!-- Categoria -->
-            <div class="mb-6">
-              <label class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-2">Categoria</label>
-              <select id="filter-cat" class="w-full px-3 py-2 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500">
-                <option value="">Todas</option>
-                {categorias.map(c => <option value={c}>{c}</option>)}
+      <div id="advanced-panel" class="hidden pb-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Vehicle selection -->
+          <div class="space-y-3">
+            <p class="text-xs font-semibold text-grey-600 uppercase tracking-wider">Vehiculo</p>
+
+            <div>
+              <label for="adv-tipo" class="text-xs text-grey-600 block mb-1">Tipo</label>
+              <select id="adv-tipo" class="w-full px-3 py-2 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500">
+                <option value="">Cargando...</option>
               </select>
             </div>
 
-            <!-- Marca -->
-            <div class="mb-6">
-              <label class="text-xs font-semibold text-grey-600 uppercase tracking-wider block mb-2">Marca</label>
-              <select id="filter-marca" class="w-full px-3 py-2 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500">
-                <option value="">Todas</option>
-                {marcas.map(m => <option value={m}>{m}</option>)}
+            <div id="adv-subtipo-wrap" class="hidden">
+              <label for="adv-subtipo" class="text-xs text-grey-600 block mb-1">Subtipo</label>
+              <select id="adv-subtipo" class="w-full px-3 py-2 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500">
+                <option value="">-- Seleccione --</option>
               </select>
             </div>
 
-            <button
-              id="filter-reset"
-              class="btn-secondary" style="width: 100%; font-size: 0.75rem; padding-top: 0.5rem; padding-bottom: 0.5rem;"
-            >
-              Limpiar filtros
-            </button>
-          </div>
-        </aside>
+            <div>
+              <label for="adv-marca" class="text-xs text-grey-600 block mb-1">Marca</label>
+              <select id="adv-marca" class="w-full px-3 py-2 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500">
+                <option value="-1">-- Seleccione --</option>
+              </select>
+            </div>
 
-        <!-- Product Grid -->
-        <div class="flex-1">
-          <div class="flex items-center justify-between mb-6">
-            <p class="text-sm text-grey-600">
-              <span id="product-count">{products.length}</span> productos encontrados
-            </p>
-            <select id="sort-select" class="text-sm border border-grey-200 rounded-md px-3 py-2 outline-none focus:border-primary-500">
-              <option value="newest">Mas recientes</option>
-              <option value="price-asc">Precio: menor a mayor</option>
-              <option value="price-desc">Precio: mayor a menor</option>
-            </select>
-          </div>
+            <div>
+              <label for="adv-modelo" class="text-xs text-grey-600 block mb-1">Modelo</label>
+              <select id="adv-modelo" class="w-full px-3 py-2 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500">
+                <option value="-1">-- Seleccione --</option>
+              </select>
+            </div>
 
-          <div id="product-grid" class="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
-            {products.map((product) => (
-              <div
-                class="product-item"
-                data-name={product.nombre.toLowerCase()}
-                data-cat={product.categoria}
-                data-marca={product.marca}
-                data-price={product.precio}
-              >
-                <ProductCard {...product} />
-              </div>
-            ))}
+            <div>
+              <label for="adv-version" class="text-xs text-grey-600 block mb-1">Version</label>
+              <select id="adv-version" class="w-full px-3 py-2 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500">
+                <option value="-1">-- Seleccione --</option>
+              </select>
+            </div>
           </div>
 
-          <!-- Empty state -->
-          <div id="empty-state" class="hidden text-center py-16">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto text-grey-400 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-            <p class="text-grey-600 text-lg">No se encontraron productos con esos filtros</p>
-            <button id="empty-reset" class="btn-primary mt-4" style="font-size: 0.75rem;">Limpiar filtros</button>
+          <!-- Part type selection -->
+          <div class="space-y-3">
+            <p class="text-xs font-semibold text-grey-600 uppercase tracking-wider">Tipo de pieza</p>
+
+            <div>
+              <label for="adv-grupo" class="text-xs text-grey-600 block mb-1">Grupo de montaje</label>
+              <select id="adv-grupo" class="w-full px-3 py-2 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500">
+                <option value="-1">-- Seleccione --</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="adv-pieza" class="text-xs text-grey-600 block mb-1">Pieza</label>
+              <select id="adv-pieza" class="w-full px-3 py-2 text-sm border border-grey-200 rounded-md outline-none focus:border-primary-500">
+                <option value="-1">-- Seleccione --</option>
+              </select>
+            </div>
+
+            <div class="pt-2">
+              <label class="flex items-center gap-2 text-sm text-grey-700 cursor-pointer">
+                <input type="checkbox" id="adv-equiv" class="rounded border-grey-300 text-primary-700 focus:ring-primary-500" />
+                Buscar piezas compatibles (equivalentes)
+              </label>
+            </div>
           </div>
         </div>
+
+        <div class="flex gap-3 mt-6">
+          <button id="adv-search-btn" type="button" class="btn-primary" style="padding-top: 0.75rem; padding-bottom: 0.75rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+            Buscar piezas
+          </button>
+          <button id="adv-reset-btn" type="button" class="btn-secondary" style="font-size: 0.75rem; padding-top: 0.75rem; padding-bottom: 0.75rem;">
+            Limpiar filtros
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Results -->
+  <section class="section-padding">
+    <div class="container-site">
+      <!-- Results count -->
+      <div id="results-info" class="hidden flex items-center justify-between mb-6">
+        <p id="results-count" class="text-sm text-grey-600"></p>
+      </div>
+
+      <!-- Results grid -->
+      <div id="results-grid" class="hidden grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+
+      <!-- Loading state -->
+      <div id="loading-state" class="hidden text-center py-16">
+        <div class="spinner"></div>
+        <p class="text-grey-600 mt-4 text-sm">Buscando piezas...</p>
+      </div>
+
+      <!-- Empty state -->
+      <div id="empty-state" class="hidden text-center py-16">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto text-grey-400 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+        <p class="text-grey-600 text-lg">No se encontraron piezas con esos criterios</p>
+        <p class="text-grey-400 text-sm mt-2">Pruebe con otros terminos de busqueda o ajuste los filtros</p>
+      </div>
+
+      <!-- Initial state (before any search) -->
+      <div id="initial-state" class="text-center py-16">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto text-primary-300 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+        <p class="text-grey-700 text-lg font-display font-bold">Busque recambios en nuestro almacen</p>
+        <p class="text-grey-500 text-sm mt-2">Escriba el nombre de la pieza o use la busqueda avanzada para filtrar por vehiculo</p>
+      </div>
+
+      <!-- Error state -->
+      <div id="error-state" class="hidden text-center py-16">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto text-red-400 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <p class="text-grey-600 text-lg">Error al buscar piezas</p>
+        <p class="text-grey-400 text-sm mt-2">Ha ocurrido un error al conectar con el almacen. Intentelo de nuevo mas tarde.</p>
+        <button id="error-retry" class="btn-primary mt-4" style="font-size: 0.75rem;">Reintentar</button>
+      </div>
+
+      <!-- Pagination -->
+      <nav id="pagination" class="hidden flex justify-center gap-1 mt-8" aria-label="Paginacion"></nav>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-primary-700 text-white py-10">
+    <div class="container-site text-center">
+      <h2 class="font-display font-bold text-2xl mb-3">No encuentra lo que busca?</h2>
+      <p class="text-primary-200 mb-6">Contactenos y le ayudamos a encontrar la pieza que necesita.</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href={site.whatsappUrl} target="_blank" rel="noopener noreferrer" class="btn-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Consultar por WhatsApp
+        </a>
+        <a href={site.phoneHref} class="btn-secondary-white font-bold text-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+          Llamar: {site.phone}
+        </a>
       </div>
     </div>
   </section>
 </Layout>
 
 <script>
-  const searchInput = document.getElementById('filter-search') as HTMLInputElement;
-  const catSelect = document.getElementById('filter-cat') as HTMLSelectElement;
-  const marcaSelect = document.getElementById('filter-marca') as HTMLSelectElement;
-  const sortSelect = document.getElementById('sort-select') as HTMLSelectElement;
-  const resetBtn = document.getElementById('filter-reset');
-  const emptyResetBtn = document.getElementById('empty-reset');
-  const grid = document.getElementById('product-grid');
-  const countEl = document.getElementById('product-count');
-  const emptyState = document.getElementById('empty-state');
+  import {
+    getTipos, getSubTipos, getMarcas, getModelos, getVersiones,
+    getGrupos, getPiezasCatalogo,
+    getNumPiezas, getPiezas,
+    getNumPiezasRef, getPiezasRef,
+    getNumPiezasAvanzada, getPiezasAvanzada,
+    getNumPiezasEquiv, getPiezasEquiv,
+  } from '../lib/cate-api';
+  import { apiConfig } from '../data/api';
+  import { addToCart } from '../lib/cart-store';
+  import type { Pieza, CatalogItem } from '../lib/cate-types';
+  import type { UnifiedProduct, UnifiedSearchResult } from '../lib/unified-types';
 
-  function filterProducts() {
-    const search = searchInput?.value.toLowerCase() ?? '';
-    const cat = catSelect?.value ?? '';
-    const marca = marcaSelect?.value ?? '';
-    const items = grid?.querySelectorAll('.product-item') as NodeListOf<HTMLElement>;
-    let visible = 0;
+  // --- State ---
+  let currentPage = 0;
+  let totalItems = 0;
+  let lastSearchType: 'quick' | 'reference' | 'advanced' = 'quick';
+  let lastSearchParams: Record<string, any> = {};
+  const PER_PAGE = apiConfig.itemsPerPage;
 
-    items?.forEach(item => {
-      const matchSearch = !search || (item.dataset.name?.includes(search) ?? false);
-      const matchCat = !cat || item.dataset.cat === cat;
-      const matchMarca = !marca || item.dataset.marca === marca;
-      const show = matchSearch && matchCat && matchMarca;
-      item.style.display = show ? '' : 'none';
-      if (show) visible++;
+  // --- DOM refs ---
+  const $form = document.getElementById('quick-search-form') as HTMLFormElement;
+  const $searchType = document.getElementById('search-type') as HTMLSelectElement;
+  const $searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const $toggleAdv = document.getElementById('toggle-advanced') as HTMLButtonElement;
+  const $advPanel = document.getElementById('advanced-panel') as HTMLDivElement;
+  const $advChevron = document.getElementById('adv-chevron') as SVGElement;
+  const $advSearchBtn = document.getElementById('adv-search-btn') as HTMLButtonElement;
+  const $advResetBtn = document.getElementById('adv-reset-btn') as HTMLButtonElement;
+  const $advEquiv = document.getElementById('adv-equiv') as HTMLInputElement;
+  const $resultsInfo = document.getElementById('results-info') as HTMLDivElement;
+  const $resultsCount = document.getElementById('results-count') as HTMLParagraphElement;
+  const $resultsGrid = document.getElementById('results-grid') as HTMLDivElement;
+  const $loading = document.getElementById('loading-state') as HTMLDivElement;
+  const $empty = document.getElementById('empty-state') as HTMLDivElement;
+  const $initial = document.getElementById('initial-state') as HTMLDivElement;
+  const $error = document.getElementById('error-state') as HTMLDivElement;
+  const $pagination = document.getElementById('pagination') as HTMLElement;
+  const $errorRetry = document.getElementById('error-retry') as HTMLButtonElement;
+
+  // Advanced selects
+  const $advTipo = document.getElementById('adv-tipo') as HTMLSelectElement;
+  const $advSubtipoWrap = document.getElementById('adv-subtipo-wrap') as HTMLDivElement;
+  const $advSubtipo = document.getElementById('adv-subtipo') as HTMLSelectElement;
+  const $advMarca = document.getElementById('adv-marca') as HTMLSelectElement;
+  const $advModelo = document.getElementById('adv-modelo') as HTMLSelectElement;
+  const $advVersion = document.getElementById('adv-version') as HTMLSelectElement;
+  const $advGrupo = document.getElementById('adv-grupo') as HTMLSelectElement;
+  const $advPieza = document.getElementById('adv-pieza') as HTMLSelectElement;
+
+  // --- UI State ---
+
+  function showState(state: 'loading' | 'results' | 'empty' | 'initial' | 'error') {
+    $loading.classList.toggle('hidden', state !== 'loading');
+    $resultsGrid.classList.toggle('hidden', state !== 'results');
+    $resultsInfo.classList.toggle('hidden', state !== 'results');
+    $empty.classList.toggle('hidden', state !== 'empty');
+    $initial.classList.toggle('hidden', state !== 'initial');
+    $error.classList.toggle('hidden', state !== 'error');
+    $pagination.classList.toggle('hidden', state !== 'results');
+  }
+
+  // --- Helpers ---
+
+  function escapeHtml(text: string): string {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function populateSelect(
+    select: HTMLSelectElement,
+    items: CatalogItem[],
+    valueKey: string,
+    placeholder = '-- Seleccione --'
+  ) {
+    select.innerHTML = '';
+    const opt = document.createElement('option');
+    opt.value = '-1';
+    opt.textContent = placeholder;
+    select.appendChild(opt);
+    items.forEach(item => {
+      const o = document.createElement('option');
+      o.value = String((item as any)[valueKey]);
+      o.textContent = item.Descripcion;
+      select.appendChild(o);
     });
-
-    if (countEl) countEl.textContent = String(visible);
-    if (emptyState) emptyState.classList.toggle('hidden', visible > 0);
-    if (grid) grid.classList.toggle('hidden', visible === 0);
   }
 
-  function resetFilters() {
-    if (searchInput) searchInput.value = '';
-    if (catSelect) catSelect.value = '';
-    if (marcaSelect) marcaSelect.value = '';
-    filterProducts();
+  function resetSelect(select: HTMLSelectElement) {
+    select.innerHTML = '<option value="-1">-- Seleccione --</option>';
   }
 
-  // URL query param support
+  // --- Part card rendering ---
+
+  function renderPartCard(p: Pieza): string {
+    const foto = p.Fotos && p.Fotos.length > 0
+      ? `data:image/png;base64,${p.Fotos[0]}`
+      : '/images/placeholder-pieza.svg';
+    const precio = p.ImporteIVA != null
+      ? `${p.ImporteIVA.toFixed(2)}&euro;`
+      : 'Consultar';
+    const garantia = p.Garantia ? `${p.Garantia} meses` : '';
+    const vehiculo = escapeHtml([p.Marca, p.Modelo].filter(Boolean).join(' '));
+    const nombre = escapeHtml(p.Pieza);
+    const detalles = [p.Motor, p.Anio ? String(p.Anio) : null].filter(Boolean).map(d => escapeHtml(d as string));
+
+    return `
+      <article class="bg-white rounded-2xl overflow-hidden border border-grey-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+        <a href="/recambios/pieza?id=${p.IdPiezaAlmacen}" class="block">
+          <div class="relative aspect-[4/3] overflow-hidden bg-grey-200">
+            <img src="${foto}" alt="${nombre}" loading="lazy"
+                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            ${garantia ? `<span class="absolute top-3 right-3 bg-primary-700 text-white text-[10px] font-display font-bold uppercase tracking-wider px-2 py-1 rounded">Garantia ${escapeHtml(garantia)}</span>` : ''}
+          </div>
+          <div class="p-5">
+            <span class="text-xs uppercase font-semibold tracking-wider text-primary-700">${vehiculo}</span>
+            <h3 class="font-body font-semibold text-sm text-dark mt-1 leading-snug line-clamp-2">${nombre}</h3>
+            ${detalles.length ? `<div class="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-xs text-grey-500">${detalles.map(d => `<span>${d}</span>`).join('')}</div>` : ''}
+            <div class="flex items-end justify-between mt-3">
+              <div>
+                <span class="font-display font-bold text-xl text-accent-700">${precio}</span>
+                ${p.ImporteIVA != null ? '<span class="text-xs text-grey-600 block">IVA incluido</span>' : ''}
+              </div>
+              <span class="text-xs font-display font-bold uppercase text-primary-700 group-hover:text-accent-500 transition-colors">Ver pieza &rarr;</span>
+            </div>
+          </div>
+        </a>
+      </article>
+    `;
+  }
+
+  // --- Unified card rendering (for /api/products results) ---
+
+  function renderUnifiedCard(p: UnifiedProduct): string {
+    const precio = p.price != null
+      ? `${p.price.toFixed(2)}&euro;`
+      : 'Consultar';
+    const vehiculo = p.vehicle
+      ? escapeHtml([p.vehicle.brand, p.vehicle.model].filter(Boolean).join(' '))
+      : escapeHtml(p.category);
+    const nombre = escapeHtml(p.name);
+    const warranty = p.partInfo?.warranty;
+    const garantia = warranty ? `${warranty} meses` : '';
+    const productJson = JSON.stringify(p).replace(/'/g, '&#39;').replace(/</g, '\\u003c');
+
+    const cartBtn = p.purchasable
+      ? `<button class="btn-add-to-cart-inline mt-2 w-full" data-product='${productJson}'>
+           <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+           Anadir al carrito
+         </button>`
+      : '';
+
+    return `
+      <article class="bg-white rounded-2xl overflow-hidden border border-grey-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+        <a href="${p.detailUrl}" class="block">
+          <div class="relative aspect-[4/3] overflow-hidden bg-grey-200">
+            <img src="${p.image}" alt="${nombre}" loading="lazy"
+                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            ${garantia ? `<span class="absolute top-3 right-3 bg-primary-700 text-white text-[10px] font-display font-bold uppercase tracking-wider px-2 py-1 rounded">Garantia ${escapeHtml(garantia)}</span>` : ''}
+            ${p.source === 'woocommerce' ? `<span class="absolute top-3 left-3 bg-accent-500 text-white text-[10px] font-display font-bold uppercase tracking-wider px-2 py-1 rounded">Tienda</span>` : ''}
+          </div>
+          <div class="p-5">
+            <span class="text-xs uppercase font-semibold tracking-wider text-primary-700">${vehiculo}</span>
+            <h3 class="font-body font-semibold text-sm text-dark mt-1 leading-snug line-clamp-2">${nombre}</h3>
+            <div class="flex items-end justify-between mt-3">
+              <div>
+                <span class="font-display font-bold text-xl text-accent-700">${precio}</span>
+                ${p.price != null ? '<span class="text-xs text-grey-600 block">IVA incluido</span>' : ''}
+              </div>
+              <span class="text-xs font-display font-bold uppercase text-primary-700 group-hover:text-accent-500 transition-colors">Ver pieza &rarr;</span>
+            </div>
+          </div>
+        </a>
+        ${cartBtn ? `<div class="px-5 pb-4">${cartBtn}</div>` : ''}
+      </article>
+    `;
+  }
+
+  // --- Cart button handler (event delegation) ---
+
+  function setupCartButtons() {
+    $resultsGrid.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest('.btn-add-to-cart-inline') as HTMLButtonElement;
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      const productData = btn.dataset.product;
+      if (!productData) return;
+
+      try {
+        const product = JSON.parse(productData) as UnifiedProduct;
+        addToCart(product, 1);
+
+        btn.textContent = 'Anadido!';
+        btn.classList.add('!bg-primary-700');
+        setTimeout(() => {
+          btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> Anadir al carrito`;
+          btn.classList.remove('!bg-primary-700');
+        }, 1500);
+      } catch (err) {
+        console.error('Error anadiendo al carrito:', err);
+      }
+    });
+  }
+
+  setupCartButtons();
+
+  // --- Pagination ---
+
+  function renderPagination() {
+    const totalPages = Math.ceil(totalItems / PER_PAGE);
+    if (totalPages <= 1) {
+      $pagination.innerHTML = '';
+      return;
+    }
+
+    const startPage = Math.max(0, currentPage - 2);
+    const endPage = Math.min(totalPages - 1, currentPage + 2);
+
+    let html = '';
+
+    html += `<button data-page="${currentPage - 1}" ${currentPage === 0 ? 'disabled' : ''}
+      class="px-3 py-2 text-sm rounded-md border ${currentPage === 0 ? 'border-grey-200 text-grey-400 cursor-not-allowed' : 'border-grey-200 text-dark hover:bg-primary-50 cursor-pointer'}">&laquo;</button>`;
+
+    if (startPage > 0) {
+      html += `<button data-page="0" class="px-3 py-2 text-sm rounded-md border border-grey-200 text-dark hover:bg-primary-50 cursor-pointer">1</button>`;
+      if (startPage > 1) html += `<span class="px-2 py-2 text-grey-400">...</span>`;
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      const isActive = i === currentPage;
+      html += `<button data-page="${i}"
+        class="px-3 py-2 text-sm rounded-md border cursor-pointer ${isActive ? 'bg-primary-700 text-white border-primary-700' : 'border-grey-200 text-dark hover:bg-primary-50'}">${i + 1}</button>`;
+    }
+
+    if (endPage < totalPages - 1) {
+      if (endPage < totalPages - 2) html += `<span class="px-2 py-2 text-grey-400">...</span>`;
+      html += `<button data-page="${totalPages - 1}" class="px-3 py-2 text-sm rounded-md border border-grey-200 text-dark hover:bg-primary-50 cursor-pointer">${totalPages}</button>`;
+    }
+
+    html += `<button data-page="${currentPage + 1}" ${currentPage >= totalPages - 1 ? 'disabled' : ''}
+      class="px-3 py-2 text-sm rounded-md border ${currentPage >= totalPages - 1 ? 'border-grey-200 text-grey-400 cursor-not-allowed' : 'border-grey-200 text-dark hover:bg-primary-50 cursor-pointer'}">&raquo;</button>`;
+
+    $pagination.innerHTML = html;
+
+    $pagination.querySelectorAll('button[data-page]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const page = parseInt((btn as HTMLButtonElement).dataset.page!);
+        const totalPages = Math.ceil(totalItems / PER_PAGE);
+        if (!isNaN(page) && page >= 0 && page < totalPages) {
+          currentPage = page;
+          executeSearch(false);
+          window.scrollTo({ top: $resultsGrid.offsetTop - 100, behavior: 'smooth' });
+        }
+      });
+    });
+  }
+
+  // --- Search execution ---
+
+  async function executeSearch(countFirst = true) {
+    showState('loading');
+
+    try {
+      // Quick text search uses unified endpoint (CAT-e + WooCommerce)
+      if (lastSearchType === 'quick') {
+        if (countFirst) currentPage = 0;
+        const res = await fetch(`/api/products?q=${encodeURIComponent(lastSearchParams.text)}&page=${currentPage}&per_page=${PER_PAGE}`);
+        if (!res.ok) throw new Error(`API error ${res.status}`);
+        const data = (await res.json()) as UnifiedSearchResult;
+
+        totalItems = data.totalItems;
+        if (totalItems === 0) {
+          showState('empty');
+          $pagination.innerHTML = '';
+          return;
+        }
+
+        $resultsGrid.innerHTML = data.products.map(renderUnifiedCard).join('');
+        $resultsCount.textContent = `${totalItems} resultado${totalItems !== 1 ? 's' : ''} encontrado${totalItems !== 1 ? 's' : ''}`;
+        renderPagination();
+        showState('results');
+        return;
+      }
+
+      // Reference and advanced search use direct CAT-e API
+      if (countFirst) {
+        currentPage = 0;
+
+        if (lastSearchType === 'reference') {
+          totalItems = await getNumPiezasRef(lastSearchParams.ref);
+        } else if (lastSearchType === 'advanced') {
+          const { tipo, marca, modelo, version, pieza, equiv } = lastSearchParams;
+          totalItems = equiv
+            ? await getNumPiezasEquiv(tipo, marca, modelo, version, pieza)
+            : await getNumPiezasAvanzada(tipo, marca, modelo, version, pieza);
+        }
+      }
+
+      if (totalItems === 0) {
+        showState('empty');
+        $pagination.innerHTML = '';
+        return;
+      }
+
+      let piezas: Pieza[] = [];
+
+      if (lastSearchType === 'reference') {
+        piezas = await getPiezasRef(lastSearchParams.ref, currentPage, PER_PAGE);
+      } else if (lastSearchType === 'advanced') {
+        const { tipo, marca, modelo, version, pieza, equiv } = lastSearchParams;
+        piezas = equiv
+          ? await getPiezasEquiv(tipo, marca, modelo, version, pieza, currentPage, PER_PAGE)
+          : await getPiezasAvanzada(tipo, marca, modelo, version, pieza, currentPage, PER_PAGE);
+      }
+
+      $resultsGrid.innerHTML = piezas.map(renderPartCard).join('');
+      $resultsCount.textContent = `${totalItems} pieza${totalItems !== 1 ? 's' : ''} encontrada${totalItems !== 1 ? 's' : ''}`;
+      renderPagination();
+      showState('results');
+    } catch (err) {
+      console.error('Error en busqueda:', err);
+      showState('error');
+    }
+  }
+
+  // --- Quick search ---
+
+  $form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = $searchInput.value.trim();
+    if (!text) return;
+
+    if ($searchType.value === 'referencia') {
+      lastSearchType = 'reference';
+      lastSearchParams = { ref: text };
+    } else {
+      lastSearchType = 'quick';
+      lastSearchParams = { text };
+    }
+
+    executeSearch(true);
+  });
+
+  // --- Advanced search toggle ---
+
+  $toggleAdv.addEventListener('click', () => {
+    const isHidden = $advPanel.classList.contains('hidden');
+    $advPanel.classList.toggle('hidden');
+    $advChevron.style.transform = isHidden ? 'rotate(180deg)' : '';
+  });
+
+  // --- Advanced search cascading selects ---
+
+  async function loadTipos() {
+    try {
+      const tipos = await getTipos();
+      $advTipo.innerHTML = '';
+      tipos.forEach(t => {
+        const o = document.createElement('option');
+        o.value = String(t.CodTipoVehiculo);
+        o.textContent = t.Descripcion;
+        $advTipo.appendChild(o);
+      });
+      if (tipos.length > 0) {
+        loadSubTipos();
+      }
+    } catch {
+      $advTipo.innerHTML = '<option value="">Error al cargar</option>';
+    }
+  }
+
+  async function loadSubTipos() {
+    const tipoId = parseInt($advTipo.value);
+    if (isNaN(tipoId)) return;
+
+    try {
+      const subtipos = await getSubTipos(tipoId);
+      populateSelect($advSubtipo, subtipos, 'CodTipoVehiculo');
+
+      if (subtipos.length > 1) {
+        $advSubtipoWrap.classList.remove('hidden');
+      } else {
+        $advSubtipoWrap.classList.add('hidden');
+      }
+
+      if (subtipos.length === 1 && subtipos[0].CodTipoVehiculo != null) {
+        $advSubtipo.value = String(subtipos[0].CodTipoVehiculo);
+      }
+
+      loadMarcas();
+      loadGrupos();
+    } catch { /* ignore */ }
+  }
+
+  async function loadMarcas() {
+    const subtipoId = parseInt($advSubtipo.value !== '-1' ? $advSubtipo.value : $advTipo.value);
+    if (isNaN(subtipoId)) return;
+
+    try {
+      const marcas = await getMarcas(subtipoId);
+      populateSelect($advMarca, marcas, 'CodMarca');
+      resetSelect($advModelo);
+      resetSelect($advVersion);
+    } catch { /* ignore */ }
+  }
+
+  async function loadModelos() {
+    const codMarca = $advMarca.value;
+    if (codMarca === '-1') { resetSelect($advModelo); resetSelect($advVersion); return; }
+
+    try {
+      const modelos = await getModelos(codMarca);
+      populateSelect($advModelo, modelos, 'CodModelo');
+      resetSelect($advVersion);
+      if (modelos.length === 1 && modelos[0].CodModelo) {
+        $advModelo.innerHTML = '';
+        const o = document.createElement('option');
+        o.value = String(modelos[0].CodModelo);
+        o.textContent = modelos[0].Descripcion;
+        $advModelo.appendChild(o);
+        loadVersiones();
+      }
+    } catch { /* ignore */ }
+  }
+
+  async function loadVersiones() {
+    const codMarca = $advMarca.value;
+    const codModelo = $advModelo.value;
+    if (codMarca === '-1' || codModelo === '-1') { resetSelect($advVersion); return; }
+
+    try {
+      const versiones = await getVersiones(codMarca, codModelo);
+      populateSelect($advVersion, versiones, 'CodVersion');
+      if (versiones.length === 1 && versiones[0].CodVersion) {
+        $advVersion.innerHTML = '';
+        const o = document.createElement('option');
+        o.value = String(versiones[0].CodVersion);
+        o.textContent = versiones[0].Descripcion;
+        $advVersion.appendChild(o);
+      }
+    } catch { /* ignore */ }
+  }
+
+  async function loadGrupos() {
+    const subtipoId = parseInt($advSubtipo.value !== '-1' ? $advSubtipo.value : $advTipo.value);
+    if (isNaN(subtipoId)) return;
+
+    try {
+      const grupos = await getGrupos(subtipoId);
+      populateSelect($advGrupo, grupos, 'CodGrupoMontaje');
+      resetSelect($advPieza);
+    } catch { /* ignore */ }
+  }
+
+  async function loadPiezasTipo() {
+    const subtipoId = parseInt($advSubtipo.value !== '-1' ? $advSubtipo.value : $advTipo.value);
+    const grupoId = $advGrupo.value;
+    if (isNaN(subtipoId) || grupoId === '-1') { resetSelect($advPieza); return; }
+
+    try {
+      const piezas = await getPiezasCatalogo(subtipoId, grupoId);
+      populateSelect($advPieza, piezas, 'CodPieza');
+    } catch { /* ignore */ }
+  }
+
+  // Wire cascade events
+  $advTipo.addEventListener('change', loadSubTipos);
+  $advSubtipo.addEventListener('change', () => { loadMarcas(); loadGrupos(); });
+  $advMarca.addEventListener('change', loadModelos);
+  $advModelo.addEventListener('change', loadVersiones);
+  $advGrupo.addEventListener('change', loadPiezasTipo);
+
+  // Advanced search button
+  $advSearchBtn.addEventListener('click', () => {
+    const subtipoVal = $advSubtipo.value !== '-1' ? $advSubtipo.value : $advTipo.value;
+    const marca = $advMarca.value;
+    const modelo = $advModelo.value;
+    const version = $advVersion.value;
+    const pieza = $advPieza.value;
+    const equiv = $advEquiv.checked;
+
+    lastSearchType = 'advanced';
+    lastSearchParams = { tipo: subtipoVal, marca, modelo, version, pieza, equiv };
+    executeSearch(true);
+  });
+
+  // Advanced reset button
+  $advResetBtn.addEventListener('click', () => {
+    resetSelect($advMarca);
+    resetSelect($advModelo);
+    resetSelect($advVersion);
+    resetSelect($advGrupo);
+    resetSelect($advPieza);
+    $advEquiv.checked = false;
+    loadTipos();
+  });
+
+  // Error retry
+  $errorRetry.addEventListener('click', () => executeSearch(true));
+
+  // --- Init ---
+
+  // Load advanced search dropdowns
+  loadTipos();
+
+  // Check for ?q= parameter (from hero search or campa links)
   const params = new URLSearchParams(window.location.search);
   const q = params.get('q');
-  if (q && searchInput) {
-    searchInput.value = q;
+  if (q) {
+    $searchInput.value = q;
+    lastSearchType = 'quick';
+    lastSearchParams = { text: q };
+    executeSearch(true);
   }
-
-  searchInput?.addEventListener('input', filterProducts);
-  catSelect?.addEventListener('change', filterProducts);
-  marcaSelect?.addEventListener('change', filterProducts);
-  resetBtn?.addEventListener('click', resetFilters);
-  emptyResetBtn?.addEventListener('click', resetFilters);
-
-  filterProducts();
 </script>

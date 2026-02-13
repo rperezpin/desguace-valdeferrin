@@ -1,0 +1,428 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { site } from '../../data/site';
+---
+
+<Layout
+  title="Detalle de Pieza"
+  description="Detalle de pieza de segunda mano con fotos, especificaciones y precio. Desguaces Valdeferrin."
+>
+  <!-- Loading state -->
+  <div id="pieza-loading" class="section-padding">
+    <div class="container-site">
+      <div class="lg:flex lg:gap-10">
+        <div class="lg:w-1/2 mb-8 lg:mb-0">
+          <div class="aspect-[4/3] bg-grey-200 rounded-xl skeleton"></div>
+        </div>
+        <div class="lg:w-1/2 space-y-4">
+          <div class="h-8 w-3/4 bg-grey-200 rounded skeleton"></div>
+          <div class="h-24 bg-grey-200 rounded-xl skeleton"></div>
+          <div class="h-32 bg-grey-200 rounded skeleton"></div>
+          <div class="h-32 bg-grey-200 rounded skeleton"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error state -->
+  <div id="pieza-error" class="hidden section-padding">
+    <div class="container-site text-center py-16">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto text-grey-400 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+      <p class="text-grey-600 text-lg">No se ha encontrado la pieza solicitada</p>
+      <p class="text-grey-400 text-sm mt-2">Es posible que la pieza ya no este disponible o que el enlace no sea correcto.</p>
+      <a href="/recambios" class="btn-primary mt-6" style="font-size: 0.75rem;">Volver al catalogo</a>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div id="pieza-content" class="hidden">
+    <!-- Breadcrumb -->
+    <div class="bg-light border-b border-grey-200 py-3">
+      <div class="container-site">
+        <nav class="text-xs text-grey-600">
+          <a href="/" class="hover:text-primary-700 transition-colors">Inicio</a>
+          <span class="mx-1">&gt;</span>
+          <a href="/recambios" class="hover:text-primary-700 transition-colors">Recambios</a>
+          <span class="mx-1">&gt;</span>
+          <span id="breadcrumb-pieza" class="text-dark"></span>
+        </nav>
+      </div>
+    </div>
+
+    <section class="section-padding">
+      <div class="container-site">
+        <div class="lg:flex lg:gap-10">
+          <!-- Left: Photo gallery -->
+          <div class="lg:w-1/2 mb-8 lg:mb-0">
+            <div id="gallery-main" class="aspect-[4/3] bg-grey-200 rounded-xl overflow-hidden mb-3">
+              <img id="main-photo" src="/images/placeholder-pieza.svg" alt=""
+                   class="w-full h-full object-contain" />
+            </div>
+            <div id="gallery-thumbs" class="flex gap-2 overflow-x-auto pb-2"></div>
+          </div>
+
+          <!-- Right: Info -->
+          <div class="lg:w-1/2">
+            <h1 id="pieza-nombre" class="font-display font-bold text-2xl md:text-3xl text-dark mb-2"></h1>
+            <p id="pieza-ref" class="text-xs text-grey-500 mb-4"></p>
+
+            <!-- Price -->
+            <div id="pieza-precio-wrap" class="bg-primary-50 rounded-xl p-5 mb-6">
+              <div class="flex items-baseline gap-3">
+                <span id="pieza-precio" class="font-display font-bold text-3xl text-accent-700"></span>
+                <span id="pieza-precio-sin-iva" class="text-sm text-grey-500"></span>
+              </div>
+              <span id="pieza-precio-label" class="text-sm text-grey-600 block mt-1"></span>
+            </div>
+
+            <!-- Vehicle info -->
+            <div class="mb-6">
+              <h2 class="font-display font-bold text-sm uppercase tracking-wider text-dark mb-3 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-primary-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                Vehiculo de origen
+              </h2>
+              <dl id="pieza-vehiculo" class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm bg-white rounded-lg p-4 border border-grey-200"></dl>
+            </div>
+
+            <!-- Part specs -->
+            <div class="mb-6">
+              <h2 class="font-display font-bold text-sm uppercase tracking-wider text-dark mb-3 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-primary-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                Especificaciones
+              </h2>
+              <dl id="pieza-specs" class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm bg-white rounded-lg p-4 border border-grey-200"></dl>
+            </div>
+
+            <!-- Observaciones -->
+            <div id="pieza-obs-wrap" class="hidden mb-6">
+              <h2 class="font-display font-bold text-sm uppercase tracking-wider text-dark mb-3">Observaciones</h2>
+              <p id="pieza-obs" class="text-sm text-grey-600 bg-white rounded-lg p-4 border border-grey-200"></p>
+            </div>
+
+            <!-- CTA buttons -->
+            <div class="flex flex-col sm:flex-row gap-3 mt-8">
+              <button id="btn-add-to-cart" class="hidden btn-primary" style="padding-top: 0.75rem; padding-bottom: 0.75rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                <span class="btn-cart-text">Anadir al carrito</span>
+              </button>
+              <a id="btn-whatsapp" href="#" target="_blank" rel="noopener noreferrer"
+                class="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20BD5A] text-white font-display font-bold text-sm uppercase tracking-wider px-6 py-3 rounded-lg transition-all hover:-translate-y-0.5 hover:shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Consultar por WhatsApp
+              </a>
+              <a href={site.phoneHref} class="btn-secondary font-bold text-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                Llamar: {site.phone}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<script>
+  import { getPieza } from '../../lib/cate-api';
+  import { addToCart } from '../../lib/cart-store';
+  import type { Pieza } from '../../lib/cate-types';
+  import type { UnifiedProduct } from '../../lib/unified-types';
+
+  const WHATSAPP_NUMBER = '34609720031';
+
+  // Current product data for cart
+  let currentProduct: UnifiedProduct | null = null;
+
+  const $loading = document.getElementById('pieza-loading')!;
+  const $error = document.getElementById('pieza-error')!;
+  const $content = document.getElementById('pieza-content')!;
+
+  function showLoading() { $loading.classList.remove('hidden'); $error.classList.add('hidden'); $content.classList.add('hidden'); }
+  function showError() { $loading.classList.add('hidden'); $error.classList.remove('hidden'); $content.classList.add('hidden'); }
+  function showContent() { $loading.classList.add('hidden'); $error.classList.add('hidden'); $content.classList.remove('hidden'); }
+
+  function escapeHtml(text: string): string {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function renderDlRow(label: string, value: string): string {
+    return `<dt class="text-grey-500">${escapeHtml(label)}</dt><dd class="font-medium text-dark">${escapeHtml(value)}</dd>`;
+  }
+
+  function renderPieza(p: Pieza) {
+    // Title & breadcrumb
+    const nombre = document.getElementById('pieza-nombre')!;
+    nombre.textContent = p.Pieza;
+    document.getElementById('breadcrumb-pieza')!.textContent = p.Pieza;
+    document.title = `${p.Pieza} | Desguaces Valdeferrin`;
+
+    // Reference
+    document.getElementById('pieza-ref')!.textContent = `Ref: ${p.IdPiezaAlmacen}${p.ReferenciaOEM ? ` | OEM: ${p.ReferenciaOEM}` : ''}`;
+
+    // Price
+    const $precio = document.getElementById('pieza-precio')!;
+    const $precioSinIva = document.getElementById('pieza-precio-sin-iva')!;
+    const $precioLabel = document.getElementById('pieza-precio-label')!;
+
+    if (p.ImporteIVA != null) {
+      $precio.innerHTML = `${p.ImporteIVA.toFixed(2)}&euro;`;
+      $precioLabel.textContent = 'IVA incluido';
+      if (p.Importe != null) {
+        $precioSinIva.textContent = `(${p.Importe.toFixed(2)}\u20AC sin IVA)`;
+      }
+    } else {
+      $precio.textContent = 'Consultar precio';
+      $precioLabel.textContent = 'Contactenos para presupuesto';
+    }
+
+    // Vehicle info
+    const vehiculoHtml = [
+      ['Vehiculo', [p.Marca, p.Modelo, p.Version].filter(Boolean).join(' ')],
+      ['Motor', p.Motor || '-'],
+      ['Ano', p.Anio ? String(p.Anio) : '-'],
+      ['Kilometros', p.Kms ? `${p.Kms.toLocaleString('es-ES')} km` : '-'],
+      ['Color', p.Color || '-'],
+    ].map(([l, v]) => renderDlRow(l as string, v as string)).join('');
+    document.getElementById('pieza-vehiculo')!.innerHTML = vehiculoHtml;
+
+    // Specs
+    const specsHtml = [
+      ['Fabricante', p.Fabricante || '-'],
+      ['Ref. OEM', p.ReferenciaOEM || '-'],
+      ['Ref. IAM', p.ReferenciaIAM || '-'],
+      ['Estado fisico', p.EstadoFisico || '-'],
+      ['Garantia', p.Garantia ? `${p.Garantia} meses` : '-'],
+      ['Peso', p.Peso ? `${p.Peso} kg` : '-'],
+      ['Cantidad', p.Cantidad ? String(p.Cantidad) : '-'],
+    ].map(([l, v]) => renderDlRow(l as string, v as string)).join('');
+    document.getElementById('pieza-specs')!.innerHTML = specsHtml;
+
+    // Observaciones
+    const $obsWrap = document.getElementById('pieza-obs-wrap')!;
+    const $obs = document.getElementById('pieza-obs')!;
+    if (p.Observaciones) {
+      $obs.innerHTML = escapeHtml(p.Observaciones);
+      if (p.Peso != null) {
+        $obs.innerHTML += `<br/>Peso: ${p.Peso} kg`;
+      }
+      $obsWrap.classList.remove('hidden');
+    }
+
+    // Photos
+    const mainImg = document.getElementById('main-photo') as HTMLImageElement;
+    const thumbsContainer = document.getElementById('gallery-thumbs')!;
+
+    if (p.Fotos && p.Fotos.length > 0) {
+      mainImg.src = `data:image/png;base64,${p.Fotos[0]}`;
+      mainImg.alt = p.Pieza;
+
+      if (p.Fotos.length > 1) {
+        p.Fotos.forEach((foto, i) => {
+          const thumb = document.createElement('button');
+          thumb.className = `w-20 h-16 rounded-md overflow-hidden border-2 ${i === 0 ? 'border-primary-700' : 'border-grey-200'} hover:border-primary-500 transition-colors flex-shrink-0 cursor-pointer`;
+          thumb.innerHTML = `<img src="data:image/png;base64,${foto}" class="w-full h-full object-cover" alt="Foto ${i + 1}" />`;
+          thumb.addEventListener('click', () => {
+            mainImg.src = `data:image/png;base64,${foto}`;
+            thumbsContainer.querySelectorAll('button').forEach(b => {
+              b.classList.remove('border-primary-700');
+              b.classList.add('border-grey-200');
+            });
+            thumb.classList.remove('border-grey-200');
+            thumb.classList.add('border-primary-700');
+          });
+          thumbsContainer.appendChild(thumb);
+        });
+      }
+    }
+
+    // WhatsApp button with pre-filled message
+    const vehiculoText = [p.Marca, p.Modelo, p.Version].filter(Boolean).join(' ');
+    const precioText = p.ImporteIVA != null ? ` - Precio: ${p.ImporteIVA.toFixed(2)}\u20AC` : '';
+    const whatsappMsg = `Hola, me interesa la pieza: ${p.Pieza} (Ref: ${p.IdPiezaAlmacen}) - ${vehiculoText}${precioText}`;
+    document.getElementById('btn-whatsapp')!.setAttribute(
+      'href',
+      `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMsg)}`
+    );
+
+    // Build UnifiedProduct for cart
+    const hasPrice = p.ImporteIVA != null && p.ImporteIVA > 0;
+    const firstImage = p.Fotos && p.Fotos.length > 0
+      ? `data:image/png;base64,${p.Fotos[0]}`
+      : '/images/placeholder-pieza.svg';
+
+    currentProduct = {
+      id: `cate-${p.IdPiezaAlmacen}`,
+      source: 'cate',
+      sourceId: p.IdPiezaAlmacen,
+      name: p.Pieza,
+      slug: `cate-${p.IdPiezaAlmacen}`,
+      description: p.Observaciones || '',
+      price: p.ImporteIVA,
+      priceWithoutTax: p.Importe,
+      currency: 'EUR',
+      image: firstImage,
+      images: [firstImage],
+      category: [p.Marca, p.Modelo].filter(Boolean).join(' '),
+      inStock: p.Cantidad > 0,
+      stockQuantity: p.Cantidad,
+      vehicle: { brand: p.Marca, model: p.Modelo, version: p.Version, engine: p.Motor, year: p.Anio, kms: p.Kms, color: p.Color },
+      partInfo: { condition: p.EstadoFisico, warranty: p.Garantia, manufacturer: p.Fabricante, referenceOEM: p.ReferenciaOEM, referenceIAM: p.ReferenciaIAM, weight: p.Peso, observations: p.Observaciones },
+      purchasable: hasPrice && p.Cantidad > 0,
+      detailUrl: `/recambios/pieza?id=${p.IdPiezaAlmacen}&source=cate`,
+    };
+
+    // Show/hide add to cart button
+    const $cartBtn = document.getElementById('btn-add-to-cart')!;
+    if (currentProduct.purchasable) {
+      $cartBtn.classList.remove('hidden');
+    }
+  }
+
+  // Render from UnifiedProduct (for WooCommerce source)
+  function renderUnifiedPieza(p: UnifiedProduct) {
+    currentProduct = p;
+
+    const nombre = document.getElementById('pieza-nombre')!;
+    nombre.textContent = p.name;
+    document.getElementById('breadcrumb-pieza')!.textContent = p.name;
+    document.title = `${p.name} | Desguaces Valdeferrin`;
+
+    document.getElementById('pieza-ref')!.textContent = p.partInfo?.referenceOEM ? `Ref: ${p.sourceId} | OEM: ${p.partInfo.referenceOEM}` : `Ref: ${p.sourceId}`;
+
+    const $precio = document.getElementById('pieza-precio')!;
+    const $precioSinIva = document.getElementById('pieza-precio-sin-iva')!;
+    const $precioLabel = document.getElementById('pieza-precio-label')!;
+
+    if (p.price != null) {
+      $precio.innerHTML = `${p.price.toFixed(2)}&euro;`;
+      $precioLabel.textContent = 'IVA incluido';
+      if (p.priceWithoutTax != null) {
+        $precioSinIva.textContent = `(${p.priceWithoutTax.toFixed(2)}\u20AC sin IVA)`;
+      }
+    } else {
+      $precio.textContent = 'Consultar precio';
+      $precioLabel.textContent = 'Contactenos para presupuesto';
+    }
+
+    // Vehicle info
+    if (p.vehicle) {
+      const vehiculoHtml = [
+        ['Vehiculo', [p.vehicle.brand, p.vehicle.model, p.vehicle.version].filter(Boolean).join(' ')],
+        ['Motor', p.vehicle.engine || '-'],
+        ['Ano', p.vehicle.year ? String(p.vehicle.year) : '-'],
+        ['Kilometros', p.vehicle.kms ? `${p.vehicle.kms.toLocaleString('es-ES')} km` : '-'],
+        ['Color', p.vehicle.color || '-'],
+      ].map(([l, v]) => renderDlRow(l as string, v as string)).join('');
+      document.getElementById('pieza-vehiculo')!.innerHTML = vehiculoHtml;
+    }
+
+    // Specs
+    if (p.partInfo) {
+      const specsHtml = [
+        ['Fabricante', p.partInfo.manufacturer || '-'],
+        ['Ref. OEM', p.partInfo.referenceOEM || '-'],
+        ['Ref. IAM', p.partInfo.referenceIAM || '-'],
+        ['Estado fisico', p.partInfo.condition || '-'],
+        ['Garantia', p.partInfo.warranty ? `${p.partInfo.warranty} meses` : '-'],
+        ['Peso', p.partInfo.weight ? `${p.partInfo.weight} kg` : '-'],
+      ].map(([l, v]) => renderDlRow(l as string, v as string)).join('');
+      document.getElementById('pieza-specs')!.innerHTML = specsHtml;
+    }
+
+    if (p.description) {
+      const $obsWrap = document.getElementById('pieza-obs-wrap')!;
+      document.getElementById('pieza-obs')!.textContent = p.description;
+      $obsWrap.classList.remove('hidden');
+    }
+
+    // Photos
+    const mainImg = document.getElementById('main-photo') as HTMLImageElement;
+    const thumbsContainer = document.getElementById('gallery-thumbs')!;
+
+    if (p.images.length > 0 && p.images[0] !== '/images/placeholder-pieza.svg') {
+      mainImg.src = p.images[0];
+      mainImg.alt = p.name;
+
+      if (p.images.length > 1) {
+        p.images.forEach((src, i) => {
+          const thumb = document.createElement('button');
+          thumb.className = `w-20 h-16 rounded-md overflow-hidden border-2 ${i === 0 ? 'border-primary-700' : 'border-grey-200'} hover:border-primary-500 transition-colors flex-shrink-0 cursor-pointer`;
+          thumb.innerHTML = `<img src="${src}" class="w-full h-full object-cover" alt="Foto ${i + 1}" />`;
+          thumb.addEventListener('click', () => {
+            mainImg.src = src;
+            thumbsContainer.querySelectorAll('button').forEach(b => {
+              b.classList.remove('border-primary-700');
+              b.classList.add('border-grey-200');
+            });
+            thumb.classList.remove('border-grey-200');
+            thumb.classList.add('border-primary-700');
+          });
+          thumbsContainer.appendChild(thumb);
+        });
+      }
+    }
+
+    // WhatsApp
+    const vehiculoText = p.vehicle ? [p.vehicle.brand, p.vehicle.model].filter(Boolean).join(' ') : '';
+    const precioText = p.price != null ? ` - Precio: ${p.price.toFixed(2)}\u20AC` : '';
+    const whatsappMsg = `Hola, me interesa: ${p.name} (Ref: ${p.sourceId}) ${vehiculoText}${precioText}`;
+    document.getElementById('btn-whatsapp')!.setAttribute(
+      'href',
+      `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMsg)}`
+    );
+
+    // Cart button
+    const $cartBtn = document.getElementById('btn-add-to-cart')!;
+    if (p.purchasable) {
+      $cartBtn.classList.remove('hidden');
+    }
+  }
+
+  async function loadPieza() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const source = params.get('source') || 'cate';
+    if (!id) { showError(); return; }
+
+    showLoading();
+    try {
+      if (source === 'wc') {
+        // Load from unified API endpoint
+        const res = await fetch(`/api/products/wc-${id}`);
+        if (!res.ok) { showError(); return; }
+        const product = (await res.json()) as UnifiedProduct;
+        renderUnifiedPieza(product);
+      } else {
+        // Load directly from CAT-e API (default)
+        const pieza = await getPieza(parseInt(id));
+        if (!pieza) { showError(); return; }
+        renderPieza(pieza);
+      }
+      showContent();
+    } catch (e) {
+      console.error('Error cargando pieza:', e);
+      showError();
+    }
+  }
+
+  // Cart button handler
+  document.getElementById('btn-add-to-cart')?.addEventListener('click', () => {
+    if (!currentProduct) return;
+    addToCart(currentProduct, 1);
+
+    const textEl = document.querySelector('.btn-cart-text');
+    const btn = document.getElementById('btn-add-to-cart')!;
+    if (textEl) {
+      textEl.textContent = 'Anadido al carrito!';
+      btn.classList.add('!bg-primary-700');
+      setTimeout(() => {
+        textEl.textContent = 'Anadir al carrito';
+        btn.classList.remove('!bg-primary-700');
+      }, 1500);
+    }
+  });
+
+  loadPieza();
+</script>

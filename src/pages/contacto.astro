@@ -45,7 +45,7 @@ import { site } from '../data/site';
               </div>
               <div>
                 <h3 class="font-display font-bold text-sm uppercase text-dark">Telefono</h3>
-                <a href={site.phoneHref} class="text-primary-700 font-semibold hover:underline">{site.phone}</a>
+                <a href={site.phoneHref} class="text-primary-700 font-bold text-lg hover:underline">{site.phone}</a>
               </div>
             </div>
 
@@ -79,9 +79,9 @@ import { site } from '../data/site';
               <div>
                 <h3 class="font-display font-bold text-sm uppercase text-dark">Horario</h3>
                 <div class="text-sm text-grey-600 mt-1 space-y-1">
-                  <p>Lunes a Viernes: <span class="text-dark font-medium">{site.horario.lunesViernes}</span></p>
-                  <p>Sabado: <span class="text-dark font-medium">{site.horario.sabado}</span></p>
-                  <p>Domingo: <span class="text-red-500 font-medium">{site.horario.domingo}</span></p>
+                  <p>Lunes a Jueves: <span class="text-dark font-medium">{site.horario.lunesJueves}</span></p>
+                  <p>Viernes: <span class="text-dark font-medium">{site.horario.viernes}</span></p>
+                  <p>Sabado y Domingo: <span class="text-red-500 font-medium">{site.horario.sabado}</span></p>
                 </div>
               </div>
             </div>

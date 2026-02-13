@@ -1,0 +1,184 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { site } from '../data/site';
+---
+
+<Layout
+  title="Carrito de Compra"
+  description="Revise los productos en su carrito de compra. Desguaces Valdeferrin."
+>
+  <!-- Header -->
+  <section class="bg-primary-700 text-white py-10">
+    <div class="container-site">
+      <h1 class="font-display font-bold text-3xl md:text-4xl mb-2">Carrito de Compra</h1>
+      <p class="text-primary-200">Revise sus productos antes de finalizar la compra.</p>
+    </div>
+  </section>
+
+  <section class="section-padding">
+    <div class="container-site">
+      <!-- Aviso carrito mixto -->
+      <div id="mixed-cart-notice" class="hidden bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+        <div class="flex items-start gap-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-600 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <p class="text-sm text-amber-800">Su carrito contiene productos de distintos proveedores. Se procesaran como <strong>2 pedidos separados</strong> con pagos independientes.</p>
+        </div>
+      </div>
+
+      <!-- Cart items -->
+      <div id="cart-items" class="hidden">
+        <div id="cart-list" class="mb-8"></div>
+
+        <!-- Summary -->
+        <div class="lg:flex lg:justify-end">
+          <div class="lg:w-96 bg-light rounded-xl p-6 border border-grey-200">
+            <h2 class="font-display font-bold text-lg text-dark mb-4">Resumen del pedido</h2>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span class="text-grey-600">Subtotal</span>
+                <span id="cart-subtotal" class="font-semibold text-dark"></span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-grey-600">IVA incluido</span>
+                <span class="text-grey-500">-</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-grey-600">Envio</span>
+                <span class="text-grey-500">Calculado en checkout</span>
+              </div>
+              <hr class="border-grey-200 my-2" />
+              <div class="flex justify-between text-lg">
+                <span class="font-display font-bold text-dark">Total</span>
+                <span id="cart-total" class="font-display font-bold text-accent-700"></span>
+              </div>
+            </div>
+
+            <a href="/checkout" class="btn-primary mt-6" style="width: 100%;">
+              Finalizar compra
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+            </a>
+
+            <a href="/recambios" class="btn-secondary mt-3" style="width: 100%; font-size: 0.75rem;">
+              Seguir comprando
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty cart -->
+      <div id="cart-empty" class="hidden text-center py-16">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-20 h-20 mx-auto text-grey-400 mb-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="8" cy="21" r="1" /><circle cx="19" cy="21" r="1" />
+          <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+        </svg>
+        <h2 class="font-display font-bold text-2xl text-dark mb-2">Su carrito esta vacio</h2>
+        <p class="text-grey-600 mb-6">Explore nuestro catalogo y encuentre las piezas que necesita.</p>
+        <a href="/recambios" class="btn-primary">
+          Ver catalogo de recambios
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  import { getCartState, updateQuantity, removeFromCart } from '../lib/cart-store';
+  import type { CartItem } from '../lib/unified-types';
+
+  const $items = document.getElementById('cart-items')!;
+  const $empty = document.getElementById('cart-empty')!;
+  const $list = document.getElementById('cart-list')!;
+  const $subtotal = document.getElementById('cart-subtotal')!;
+  const $total = document.getElementById('cart-total')!;
+
+  function escapeHtml(text: string): string {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function renderCartItem(item: CartItem): string {
+    const price = item.product.price != null ? item.product.price.toFixed(2) : '0.00';
+    const lineTotal = ((item.product.price || 0) * item.quantity).toFixed(2);
+
+    return `
+      <div class="cart-item-row" data-id="${item.product.id}">
+        <div class="w-20 h-16 rounded-md overflow-hidden bg-grey-200 flex-shrink-0">
+          <img src="${item.product.image}" alt="${escapeHtml(item.product.name)}" class="w-full h-full object-cover" />
+        </div>
+        <div class="flex-1 min-w-0">
+          <a href="${item.product.detailUrl}" class="font-body font-semibold text-sm text-dark hover:text-primary-700 transition-colors line-clamp-2">
+            ${escapeHtml(item.product.name)}
+          </a>
+          <p class="text-xs text-grey-500 mt-0.5">${item.product.vehicle ? escapeHtml([item.product.vehicle.brand, item.product.vehicle.model].filter(Boolean).join(' ')) : escapeHtml(item.product.category)}</p>
+          <p class="text-xs text-grey-400">${price}&euro; / ud.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="cart-qty-btn w-8 h-8 rounded border border-grey-200 text-grey-600 hover:bg-primary-50 cursor-pointer flex items-center justify-center" data-action="decrease" data-id="${item.product.id}">-</button>
+          <span class="text-sm font-medium w-8 text-center">${item.quantity}</span>
+          <button class="cart-qty-btn w-8 h-8 rounded border border-grey-200 text-grey-600 hover:bg-primary-50 cursor-pointer flex items-center justify-center" data-action="increase" data-id="${item.product.id}">+</button>
+        </div>
+        <div class="text-right">
+          <span class="font-display font-bold text-accent-700">${lineTotal}&euro;</span>
+        </div>
+        <div>
+          <button class="cart-remove-btn w-8 h-8 rounded text-grey-400 hover:text-red-500 hover:bg-red-50 cursor-pointer flex items-center justify-center transition-colors" data-id="${item.product.id}" title="Eliminar">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  const $mixedNotice = document.getElementById('mixed-cart-notice')!;
+
+  function renderCart() {
+    const state = getCartState();
+
+    if (state.itemCount === 0) {
+      $items.classList.add('hidden');
+      $empty.classList.remove('hidden');
+      $mixedNotice.classList.add('hidden');
+      return;
+    }
+
+    $empty.classList.add('hidden');
+    $items.classList.remove('hidden');
+
+    // Detectar carrito mixto (CAT-e + WC)
+    const hasCate = state.items.some(i => i.product.source === 'cate');
+    const hasWc = state.items.some(i => i.product.source === 'woocommerce');
+    $mixedNotice.classList.toggle('hidden', !(hasCate && hasWc));
+
+    $list.innerHTML = state.items.map(renderCartItem).join('');
+    $subtotal.textContent = `${state.subtotal.toFixed(2)}\u20AC`;
+    $total.textContent = `${state.subtotal.toFixed(2)}\u20AC`;
+
+    // Wire quantity buttons
+    $list.querySelectorAll('.cart-qty-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = (btn as HTMLElement).dataset.id!;
+        const action = (btn as HTMLElement).dataset.action;
+        const item = state.items.find(i => i.product.id === id);
+        if (!item) return;
+
+        const newQty = action === 'increase' ? item.quantity + 1 : item.quantity - 1;
+        updateQuantity(id, newQty);
+        renderCart();
+      });
+    });
+
+    // Wire remove buttons
+    $list.querySelectorAll('.cart-remove-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = (btn as HTMLElement).dataset.id!;
+        removeFromCart(id);
+        renderCart();
+      });
+    });
+  }
+
+  renderCart();
+  window.addEventListener('cart:updated', renderCart);
+</script>

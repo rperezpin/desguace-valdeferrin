@@ -20,10 +20,89 @@ import products from '../data/products.json';
       </a>
     </div>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Grid: static fallback replaced by live API data -->
+    <div id="novedades-grid" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
       {products.slice(0, 8).map((product) => (
         <ProductCard {...product} />
       ))}
     </div>
   </div>
 </section>
+
+<script>
+  import type { UnifiedProduct, UnifiedSearchResult } from '../lib/unified-types';
+
+  function escapeHtml(text: string): string {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function renderNovedadCard(p: UnifiedProduct): string {
+    const precio = p.price != null
+      ? `${p.price.toFixed(2)}&euro;`
+      : 'Consultar';
+    const vehiculo = p.vehicle
+      ? escapeHtml([p.vehicle.brand, p.vehicle.model].filter(Boolean).join(' '))
+      : escapeHtml(p.category);
+    const nombre = escapeHtml(p.name);
+    const warranty = p.partInfo?.warranty;
+    const garantia = warranty ? `${warranty} meses` : '';
+
+    return `
+      <article class="bg-white rounded-2xl overflow-hidden border border-grey-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+        <a href="${p.detailUrl}" class="block">
+          <div class="relative aspect-[4/3] overflow-hidden bg-grey-200">
+            <img src="${p.image}" alt="${nombre}" loading="lazy"
+                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            ${garantia ? `<span class="absolute top-3 right-3 bg-primary-700 text-white text-[10px] font-display font-bold uppercase tracking-wider px-2 py-1 rounded">Garantia</span>` : ''}
+            ${p.source === 'woocommerce' ? `<span class="absolute top-3 left-3 bg-accent-500 text-white text-[10px] font-display font-bold uppercase tracking-wider px-2 py-1 rounded">Tienda</span>` : ''}
+          </div>
+          <div class="p-5">
+            <span class="text-xs uppercase font-semibold tracking-wider text-primary-700">${vehiculo}</span>
+            <h3 class="font-body font-semibold text-sm text-dark mt-1 leading-snug line-clamp-2">${nombre}</h3>
+            <div class="flex items-end justify-between mt-3">
+              <div>
+                <span class="font-display font-bold text-xl text-accent-700">${precio}</span>
+                ${p.price != null ? '<span class="text-xs text-grey-600 block">IVA incluido</span>' : ''}
+              </div>
+              <span class="text-xs font-display font-bold uppercase text-primary-700 group-hover:text-accent-500 transition-colors">Ver pieza &rarr;</span>
+            </div>
+          </div>
+        </a>
+      </article>
+    `;
+  }
+
+  async function loadNovedades() {
+    const grid = document.getElementById('novedades-grid');
+    if (!grid) return;
+
+    try {
+      // Fetch from both sources via unified endpoint
+      const [cateRes, wcRes] = await Promise.allSettled([
+        fetch('/api/products?q=%20&page=0&per_page=4&source=cate'),
+        fetch('/api/products?page=0&per_page=4&source=wc'),
+      ]);
+
+      let products: UnifiedProduct[] = [];
+
+      if (cateRes.status === 'fulfilled' && cateRes.value.ok) {
+        const data = (await cateRes.value.json()) as UnifiedSearchResult;
+        products.push(...data.products);
+      }
+      if (wcRes.status === 'fulfilled' && wcRes.value.ok) {
+        const data = (await wcRes.value.json()) as UnifiedSearchResult;
+        products.push(...data.products);
+      }
+
+      if (products.length > 0) {
+        grid.innerHTML = products.slice(0, 8).map(renderNovedadCard).join('');
+      }
+    } catch {
+      // Keep static fallback on error
+    }
+  }
+
+  loadNovedades();
+</script>
